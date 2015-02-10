@@ -14,6 +14,9 @@ public class Robot extends IterativeRobot {
 
     Joystick leftStick = new Joystick(1);
     Joystick rightStick = new Joystick(2);
+    Joystick secondaryStick = new Joystick(3);
+    
+    ToteLifter elevator = new ToteLifter(4, 5);
     
     public void robotInit() {
     	mainDrive.octoShift(true);
@@ -25,15 +28,23 @@ public class Robot extends IterativeRobot {
 
     
     public void teleopPeriodic() {
-    	if (leftStick.getRawButton(3)) {
+    	if (leftStick.getRawButton(3)) { //Changes to tank
     		mainDrive.octoShift(false);
     	}
-    	if (leftStick.getRawButton(2)) {
+    	if (leftStick.getRawButton(2)) { //Changes to mecanum
     		mainDrive.octoShift(true);
     	}
     	
-    	mainDrive.manualDrive(leftStick, rightStick);
+    	mainDrive.manualDrive(leftStick, rightStick); //Drives according to tank/mecanum
         
+    	if (secondaryStick.getRawButton(3)){
+    		elevator.autoLift(1.0);          
+    	} else if (secondaryStick.getRawButton(2)){
+    		elevator.autoLift(-1.0);
+    	} else {
+    		elevator.autoLift(0.0);
+    	}
+    	
     }
     
     public void testInit() {
