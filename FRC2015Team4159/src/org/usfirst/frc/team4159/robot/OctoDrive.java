@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Victor;
 
 import java.lang.Math;
 
-public class teleopOctoOriginal {
+public class OctoDrive {
 	
 //	private PIDVictor frontLeft;
 //	private PIDVictor rearLeft;
@@ -22,7 +22,7 @@ public class teleopOctoOriginal {
 	
 	private boolean isMecanum;
 	
-	public teleopOctoOriginal(DriveWheels wheelSet, DrivePistons pistonSet) {
+	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
 		frontLeft = wheelSet.frontLeftMotor;
 		rearLeft = wheelSet.rearLeftMotor;
 		frontRight = wheelSet.frontRightMotor;
