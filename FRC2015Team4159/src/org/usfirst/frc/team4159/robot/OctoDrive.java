@@ -17,16 +17,28 @@ public class OctoDrive {
 	private Victor rearLeft;
 	private Victor frontRight;
 	private Victor rearRight;
+	//PROVISIONAL//
 	
 	private DrivePistons octoShift;
 	
 	private boolean isMecanum;
+	private boolean frontLeftInverted;
+	private boolean rearLeftInverted;
+	private boolean frontRightInverted;
+	private boolean rearRightInverted;
+	private boolean leftSideInverted;
+	private boolean rightSideInverted;
 	
 	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
 		frontLeft = wheelSet.frontLeftMotor;
 		rearLeft = wheelSet.rearLeftMotor;
 		frontRight = wheelSet.frontRightMotor;
 		rearRight = wheelSet.rearRightMotor;
+		
+		frontLeftInverted = false;
+		rearLeftInverted = false;
+		frontRightInverted = false;
+		rearRightInverted = false;
 		
 		octoShift = pistonSet;
 	}
@@ -70,6 +82,20 @@ public class OctoDrive {
 				rear_left/=max;
 				rear_right/=max;
 			}
+			
+			if(frontLeftInverted) {
+				front_left = -front_left;
+				
+			}
+			if(rearLeftInverted) {
+				rear_left = -rear_left;
+			}
+			if(frontRightInverted){
+				front_right = -front_right;
+			}
+			if(rearRightInverted){
+				rear_right = -rear_right;
+			}
 		
 //			frontLeft.pidSet(front_left);
 //			rearLeft.pidSet(rear_left);
@@ -87,6 +113,13 @@ public class OctoDrive {
 			double leftVelocity = driveStick.getY();
 			double rightVelocity = driveStick.getY();
 			
+			if(leftSideInverted) {
+				leftVelocity = -leftVelocity;
+			}
+			if(rightSideInverted) {
+				rightVelocity = -rightVelocity;
+			}
+			
 //			frontLeft.pidSet(leftVelocity);
 //			rearLeft.pidSet(leftVelocity);
 //			frontRight.pidSet(rightVelocity);
@@ -98,6 +131,32 @@ public class OctoDrive {
 			frontRight.set(rightVelocity);
 			rearRight.set(rightVelocity);
 			//PROVISIONAL//
+		}
+	}
+	
+	public void invertMotor(String motorName, boolean isInverted) {
+		switch (motorName) {
+			case "frontLeft":
+				frontLeftInverted = isInverted;
+				break;
+			case "rearleft":
+				rearLeftInverted = isInverted;
+				break;
+			case "frontRight":
+				frontRightInverted = isInverted;
+				break;
+			case "rearRight":
+				rearRightInverted = isInverted;
+				break;
+			case "leftSide":
+				leftSideInverted = isInverted;
+				break;
+			case "rightSide":
+				rightSideInverted = isInverted;
+				break;
+			default:
+				System.out.println("No motors were inverted.");
+				break;
 		}
 	}
 }
