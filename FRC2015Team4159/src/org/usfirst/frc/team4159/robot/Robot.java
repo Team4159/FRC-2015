@@ -20,6 +20,7 @@ public class Robot extends IterativeRobot {
     
     public void robotInit() {
     	mainDrive.octoShift(true);
+    	elevator.setHighLow(10, 11);
     }
     
     public void autonomousPeriodic() {
