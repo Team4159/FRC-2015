@@ -43,14 +43,24 @@ public class ToteLifter {
 	}
 	
 	public void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
-			if ((lowLimit.get() == false) && velocity < 0) {
-				manualLift(0.0);
-			} if((topLimit.get() == false) && velocity > 0) {
-				manualLift(0.0);
-			} if(velocity == 0.0) {
-				manualLift(0.0);
+			if (velocity > 0) {
+				
+				if (topLimit.get() == false) {              //Checks if top limit switch is pressed if positive value
+					this.manualLift(0.0);                   //If not, it continues
+				} else {
+					this.manualLift(velocity);
+				}
+				
+			} else if (velocity < 0) {
+				
+				if (lowLimit.get() == false) {              
+					this.manualLift(0.0);
+				} else {
+					this.manualLift(velocity);              //Checks if low limit switch is pressed if negative value
+				}                                           //If not, it continues
+				
 			} else {
-				manualLift(velocity);
+				this.manualLift(0.0);                       //If value is not greater or less, then it is 0, meaning a stop
 			}
 	}
 	

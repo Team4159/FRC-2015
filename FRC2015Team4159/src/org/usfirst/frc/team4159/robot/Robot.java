@@ -73,8 +73,14 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    													
-    	rightLifter.set(1.0);
+    	if (topSensor.get() == false) {          //limit switch tester
+    		elevator.manualLift(1.0);
+    	} else if (lowSensor.get() == false) {
+    		elevator.manualLift(-1.0);
+    	} else {
+    		elevator.manualLift(0.0);
+    	}
+    	
     }
     
     public void disabledInit() {                                            //Reset PID
