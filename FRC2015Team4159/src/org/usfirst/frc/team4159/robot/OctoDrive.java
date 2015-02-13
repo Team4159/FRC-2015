@@ -159,4 +159,59 @@ public class OctoDrive {
 				break;
 		}
 	}
+	
+	public void autoMecanum(double sideValue, double forwardValue, double turnValue) {
+		double right = sideValue;
+		double forward = -forwardValue;
+		double clockwise = turnValue;
+	
+		double front_left = forward + clockwise + right;
+		double front_right = forward - clockwise - right;
+		double rear_left = forward + clockwise - right;
+		double rear_right = forward - clockwise + right;
+	
+		double max = Math.abs(front_left);
+		if (Math.abs(front_right) > max) {
+		max = Math.abs(front_right);
+		} 
+		if (Math.abs(rear_left) > max) {
+			max = Math.abs(rear_left);
+		} 
+		if (Math.abs(rear_right) > max) {
+			max = Math.abs(rear_right);
+		}
+	
+		if (max>1) {
+			front_left/=max;
+			front_right/=max;
+			rear_left/=max;
+			rear_right/=max;
+		}
+		
+		if(frontLeftInverted) {
+			front_left = -front_left;
+			
+		}
+		if(rearLeftInverted) {
+			rear_left = -rear_left;
+		}
+		if(frontRightInverted){
+			front_right = -front_right;
+		}
+		if(rearRightInverted){
+			rear_right = -rear_right;
+		}
+	
+//		frontLeft.pidSet(front_left);
+//		rearLeft.pidSet(rear_left);
+//		frontRight.pidSet(front_right);
+//		rearRight.pidSet(rear_right);
+		
+		//PROVISIONAL//
+		frontLeft.set(front_left);
+		rearLeft.set(rear_left);
+		frontRight.set(front_right);
+		rearRight.set(rear_right);
+		//PROVISIONAL//
+	}
 }
