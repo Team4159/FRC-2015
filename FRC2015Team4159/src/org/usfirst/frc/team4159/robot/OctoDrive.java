@@ -160,7 +160,7 @@ public class OctoDrive {
 		}
 	}
 	
-	public void autoMecanum(double sideValue, double forwardValue, double turnValue) {
+	public void autoMecanumDrive(double sideValue, double forwardValue, double turnValue) {
 		double right = sideValue;
 		double forward = -forwardValue;
 		double clockwise = turnValue;

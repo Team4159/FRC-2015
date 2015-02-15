@@ -64,5 +64,13 @@ public class ToteLifter {
 			}
 	}
 	
+	public void moveLow() {
+		while(lowLimit.get()) {
+			this.manualLift(-1.0);
+		}
+		this.manualLift(0.0);
+	}
+	
+	
 }
 	
