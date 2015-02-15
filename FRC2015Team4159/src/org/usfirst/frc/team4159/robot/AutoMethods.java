@@ -65,6 +65,23 @@ public class AutoMethods {
 		mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
 	}
 	
+	public void toteGrabLoop(boolean ifStartingPosition) {
+		if (ifStartingPosition==false) {
+			mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
+			Timer.delay(travelTime);
+			mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
+		}
+		toteAim();
+		toteGet();
+		mainElevator.moveLow();
+		mainElevator.autoLift(1.0);
+		mainDrive.autoMecanumDrive(1.0, 0.0, 0.0);
+		Timer.delay(liftTime);
+		mainElevator.autoLift(0.0);
+		Timer.delay(rejoinRouteTime-liftTime);
+		mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
+	}
+	
 	
 	public void autoLoop() {
 		boolean isStage1Enabled;
@@ -125,52 +142,7 @@ public class AutoMethods {
 				break;
 		}
 		if(isMoveOnly==false) {
-			if (isStage1Enabled){
-				this.toteAim();
-				this.toteGet();
-				mainElevator.moveLow();
-				mainElevator.autoLift(1.0);
-				mainDrive.autoMecanumDrive(1.0, 0, 0);
-				Timer.delay(liftTime);
-				mainElevator.autoLift(0.0);
-				Timer.delay(rejoinRouteTime-liftTime);
-				mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-			} else {
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);
-			}
-			if (isStage2Enabled) {
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);
-				this.toteAim();
-				this.toteGet();
-				mainElevator.moveLow();
-				mainElevator.autoLift(1.0);
-				mainDrive.autoMecanumDrive(1.0, 0, 0);
-				Timer.delay(liftTime);
-				mainElevator.autoLift(0.0);
-				Timer.delay(rejoinRouteTime-liftTime);
-				mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-			} else {
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);
-			}	
-			if (isStage3Enabled) {
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);
-				this.toteAim();
-				this.toteGet();
-				mainElevator.moveLow();
-				mainElevator.autoLift(1.0);
-				mainDrive.autoMecanumDrive(1.0, 0, 0);
-				Timer.delay(liftTime);
-				mainElevator.autoLift(0.0);
-				Timer.delay(rejoinRouteTime-liftTime);
-				mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-			} else {
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);
-			}		
+			//Add stages
 			if (ifGTFO){
 				this.toteAim();
 				this.toteGet();
