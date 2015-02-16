@@ -32,12 +32,18 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	mainDrive.octoShift(true);
     	elevator.setHighLow(lowSensor, topSensor);
+    	mainDrive.invertMotor("rearRight", true);
+    	mainDrive.invertMotor("frontRight", true);
+    	mainDrive.invertMotor("leftSide", true);
     }
     
     public void autonomousPeriodic() {
 
     }
 
+    public void teleopInit() {
+    	
+    }
     
     public void teleopPeriodic() {
     	System.out.println("teleop Looped!");

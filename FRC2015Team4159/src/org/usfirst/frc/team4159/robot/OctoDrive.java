@@ -111,7 +111,7 @@ public class OctoDrive {
 			
 		} else {
 			double leftVelocity = driveStick.getY();
-			double rightVelocity = driveStick.getY();
+			double rightVelocity = turnStick.getY();
 			
 			if(leftSideInverted) {
 				leftVelocity = -leftVelocity;

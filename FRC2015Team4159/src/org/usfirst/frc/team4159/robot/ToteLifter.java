@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4159.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 //Hopefully PID-free class for the toteLifter
 public class ToteLifter {
@@ -8,8 +9,7 @@ public class ToteLifter {
 	Victor rightLifter;
 	
 	DigitalInput lowLimit;
-	DigitalInput topLimit;
-	
+	DigitalInput topLimit; 
 	
 	public ToteLifter(Victor leftMotor, Victor rightMotor) { //Motor inputs are declared
 		leftLifter = leftMotor;
