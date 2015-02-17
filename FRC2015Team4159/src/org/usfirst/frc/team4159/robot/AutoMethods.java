@@ -39,44 +39,15 @@ public class AutoMethods {
 		autoChooser.addObject("Straight Shot 3 Tote Pickup", new Integer(GTFO_TOTE));
 	}
 	
-	public void toteAim() {
-		double xOffSet = 0;  //Only for retrieve value purposes
-		table.retrieveValue("XOffset", xOffSet);                         //Gets initial values
-		while (xOffSet >=-1 &&  xOffSet <= 1) {                          //Drive right until offset is close to 0 (need a margin)
-			mainDrive.autoMecanumDrive(-1.0, 0, 0);                        
-			table.retrieveValue("XOffset", xOffSet);                     //ReUpdates to keep track of progress
-		}
-	}
-	
 	
 	
 	public int getChoice() {
 		return (((Integer)autoChooser.getSelected()).intValue());       //Returns integer value of the chosen autonomus mode UNBOXED
 	}
 	
-	public void toteGet() {
-		while(toteSensor.get()){
-			mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);                  //Drives forward until tote is sufficiently inside the drivetrain (back will hit limit switch)
-		}
-		mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-	}
+
 	
-	public void toteGrabLoop(boolean ifStartingPosition) {              //This is the loop that will aim, grab tote, and drive to be ready for next loop
-		if (ifStartingPosition==false) {
-			mainDrive.autoMecanumDrive(0.0, 1.0, 0.0); 					//If the robot is not in the starting position, it will drive forward to acquire the next tote
-			Timer.delay(travelTime);                   //Drives forward seconds given by variable travelTime (initialized at the top)
-			mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-		}
-		toteAim(); //Aims for tote
-		toteGet(); //Drives so that tote is completely inside drivetrain
-		mainElevator.moveLow(); //Moves the elevator to lowest position
-		mainElevator.autoLift(1.0); //Starts lifting tote and driving
-		mainDrive.autoMecanumDrive(1.0, 0.0, 0.0);
-		Timer.delay(liftTime);
-		mainElevator.autoLift(0.0); //Stops lifting tote according to how long liftTime is (initialized at top)
-		Timer.delay(rejoinRouteTime-liftTime); //Continues driving according to rejoinRouteTime (initialized at top)
-		mainDrive.autoMecanumDrive(0.0, 0.0, 0.0); //Stops for next loop
-	}
+	
 	
 	
 	public void autoLoop() {
@@ -136,38 +107,6 @@ public class AutoMethods {
 				ifGTFO=false;
 				isMoveOnly = true;
 				break;
-		}
-		if(isMoveOnly==false) { //If the robot is not selected as move_only, then it will undergo the stages
-			if (isStage1Enabled) {
-				toteGrabLoop(true);
-				isStage1Enabled=false; //set to false so that stage1 won't be repeated a second time
-			} else if(isStage2Enabled){
-				toteGrabLoop(false);
-				isStage2Enabled=false;
-			} else if(isStage3Enabled){
-				toteGrabLoop(false);
-				isStage3Enabled=false; 
-			} else {                 
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0);
-				Timer.delay(travelTime);  //This code will move the robot forward enough to skip the process of grabbing the tote
-				mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
-			}
-			if (ifGTFO){ //Code for a straight shot with the containers out of the way
-				this.toteAim(); 									//aims at tote
-				this.toteGet(); 									//acquires tote
-				mainElevator.moveLow(); 							//sets elevator to lowest position
-				mainElevator.autoLift(1.0); 						//starts lifting
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0); 			//starts driving
-				Timer.delay(liftTime); 								//delays lifting times
-				mainElevator.autoLift(0.0); 						//Stops lifting (tote is sufficiently lifted)
-				mainDrive.autoMecanumDrive(0.0, 1.0, 0.0); 			//Continues driving
-				Timer.delay(travelTime-liftTime); 					//Continues driving for the value of travelTime (liftTime is compensated for)
-				mainDrive.autoMecanumDrive(0.0, 0.0, 0.0); 			//Stops for next loop				
-			}
-		} else {
-			mainDrive.autoMecanumDrive(0.0, 1.0, 0.0); //Just moves the robot to the autozone (if move_only is selected)
-			Timer.delay(3.0);
-			mainDrive.autoMecanumDrive(0.0, 0.0, 0.0);
 		}
 	 
 	}

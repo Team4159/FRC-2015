@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 
 
@@ -13,7 +14,7 @@ public class Robot extends IterativeRobot {
 	
     DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);
     DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);
-    OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet);
+    OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet, 7);
 
     Joystick leftStick = new Joystick(1);
     Joystick rightStick = new Joystick(2);
@@ -37,8 +38,12 @@ public class Robot extends IterativeRobot {
     	mainDrive.invertMotor("leftSide", true);
     }
     
+    public void autonomousInit() {
+    	mainDrive.startAutoThread();
+    }
+    
     public void autonomousPeriodic() {
-
+    	mainDrive.autoMecanumDrive(0.5, true);
     }
 
     public void teleopInit() {
@@ -79,18 +84,9 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    	if (topSensor.get() == false) {          //limit switch tester
-    		elevator.manualLift(1.0);
-    	} else if (lowSensor.get() == false) {
-    		elevator.manualLift(-1.0);
-    	} else {
-    		elevator.manualLift(0.0);
-    	}
-    	
-    }
-    
+    }	
     public void disabledInit() {                                            //Reset PID
     	
-    }
     
+    }
 }
