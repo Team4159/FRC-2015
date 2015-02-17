@@ -1,14 +1,12 @@
 package org.usfirst.frc.team4159.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
 
 import java.lang.Math;
 
-public class OctoDrive implements Runnable {
+public class OctoDrive {
 	
 //	private PIDVictor frontLeft;
 //	private PIDVictor rearLeft;
@@ -33,15 +31,9 @@ public class OctoDrive implements Runnable {
 	private boolean rightSideInverted;
 	
 	
-	RobotDrive notMainDrive;
-	public Gyro gyro;
-	private double Kp = 0.3; //Test to change
-	boolean ifForward;
-	boolean ifSideways;
-	DriverStation ds;
-	double autoVelocity;
+	public RobotDrive notMainDrive;
 	
-	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet, Gyro tempGyro) {
+	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
 		frontLeft = wheelSet.frontLeftMotor;
 		rearLeft = wheelSet.rearLeftMotor;
 		frontRight = wheelSet.frontRightMotor;
@@ -53,27 +45,9 @@ public class OctoDrive implements Runnable {
 		rearRightInverted = false;
 		
 		octoShift = pistonSet;
-		
 		notMainDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
-		gyro = tempGyro;
 	}
 	
-	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet, int gyroPort) {
-		frontLeft = wheelSet.frontLeftMotor;
-		rearLeft = wheelSet.rearLeftMotor;
-		frontRight = wheelSet.frontRightMotor;
-		rearRight = wheelSet.rearRightMotor;
-		
-		frontLeftInverted = false;
-		rearLeftInverted = false;
-		frontRightInverted = false;
-		rearRightInverted = false;
-		
-		octoShift = pistonSet;
-		
-		notMainDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
-		gyro = new Gyro(gyroPort);
-	}
 	
 	public void octoShift(boolean state) {
 		isMecanum = state;
@@ -193,35 +167,36 @@ public class OctoDrive implements Runnable {
 	}
 	
 	
-	public void autoMecanumDrive(double velocity, boolean ifDriveStraight) {
-		if (ifDriveStraight) {
-			autoVelocity=velocity;
-			ifForward=true;
-		}
-	}
-	
-	public void autoStop() {
-		ifForward=false;
-		ifSideways=false;
-		autoVelocity=0.0;
-	}
-
-	
-	public void run() {
-		double gyroAngle;
-		while (ds.isEnabled()) {
-			gyroAngle = gyro.getAngle();
-			if (ifForward) {
-				notMainDrive.drive(autoVelocity, -gyroAngle*Kp);
-			} else {
-				notMainDrive.drive(0.0, 0.0);
-			}
-		
-		}
-	}
-	
-	public void startAutoThread() {
-		Thread autoThread = new Thread(this);
-		autoThread.start();
-	}
+//	public void autoMecanumDrive(double velocity, boolean ifDriveStraight) {
+//		if (ifDriveStraight) {
+//			autoVelocity=velocity;
+//			ifForward=true;
+//		}
+//	}
+//	
+//	public void autoStop() {
+//		ifForward=false;
+//		ifSideways=false;
+//		autoVelocity=0.0;
+//	}
+//
+//	
+//	public void run() {
+//		double gyroAngle;
+//		while (ds.isEnabled()) {
+//			gyroAngle = gyro.getAngle();
+//			if (ifForward) {
+//				notMainDrive.drive(autoVelocity, -gyroAngle*Kp);
+//			} else {
+//				notMainDrive.drive(0.0, 0.0);
+//			}
+//		
+//		}
+//	}
+//	
+//	public void startAutoThread() {
+//		gyro.reset();
+//		Thread autoThread = new Thread(this);
+//		autoThread.start();
+//	}
 }

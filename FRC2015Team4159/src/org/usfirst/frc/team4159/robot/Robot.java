@@ -1,25 +1,23 @@
-
 package org.usfirst.frc.team4159.robot;
-
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 
-
 public class Robot extends IterativeRobot {
 	
     DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);
     DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);
-    OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet, 7);
+    Gyro gyro = new Gyro(0);
+    OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet);
 
     Joystick leftStick = new Joystick(1);
     Joystick rightStick = new Joystick(2);
     Joystick secondaryStick = new Joystick(3);
-    
     
     Victor leftLifter = new Victor(4);
     Victor rightLifter = new Victor(5);
@@ -30,6 +28,9 @@ public class Robot extends IterativeRobot {
     DigitalInput lowSensor = new DigitalInput(8);
     DigitalInput topSensor = new DigitalInput(9);
     
+    Double gyroAngle;
+    Double Kp = 0.3;
+    
     public void robotInit() {
     	mainDrive.octoShift(true);
     	elevator.setHighLow(lowSensor, topSensor);
@@ -39,11 +40,12 @@ public class Robot extends IterativeRobot {
     }
     
     public void autonomousInit() {
-    	mainDrive.startAutoThread();
+    	gyro.reset();
     }
     
     public void autonomousPeriodic() {
-    	mainDrive.autoMecanumDrive(0.5, true);
+    	gyroAngle = gyro.getAngle();
+    	mainDrive.notMainDrive.drive(0.5, -gyroAngle*Kp);
     }
 
     public void teleopInit() {
@@ -86,7 +88,5 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
     }	
     public void disabledInit() {                                            //Reset PID
-    	
-    
     }
 }
