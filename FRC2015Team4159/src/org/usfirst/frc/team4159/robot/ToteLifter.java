@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 //Hopefully PID-free class for the toteLifter
 public class ToteLifter {
-	Victor leftLifter;
-	Victor rightLifter;
+	static Victor leftLifter;
+	static Victor rightLifter;
 	
-	DigitalInput lowLimit;
-	DigitalInput topLimit; 
+	static DigitalInput lowLimit;
+	static DigitalInput topLimit; 
 	
 	public ToteLifter(Victor leftMotor, Victor rightMotor) { //Motor inputs are declared
 		leftLifter = leftMotor;
@@ -24,12 +24,12 @@ public class ToteLifter {
 		
 	}
 	
-	public void manualLift(double velocity) {               //Moves the elevator WITHOUT regards to the touch sensors
+	public static void manualLift(double velocity) {               //Moves the elevator WITHOUT regards to the touch sensors
 		leftLifter.set(-velocity);							//WARNING: Motors can overshoot
 		rightLifter.set(velocity);
 	}
 	
-	public void setHighLow(DigitalInput lowSensor, DigitalInput topSensor) {
+	public static void setHighLow(DigitalInput lowSensor, DigitalInput topSensor) {
 		lowLimit = lowSensor;                               //Sensor input objects passed over to be set
 		topLimit = topSensor;
 		
@@ -42,33 +42,33 @@ public class ToteLifter {
 		
 	}
 	
-	public void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
+	public static void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
 			if (velocity > 0) {
 				
 				if (topLimit.get() == false) {              //Checks if top limit switch is pressed if positive value
-					this.manualLift(0.0);                   //If not, it continues
+					manualLift(0.0);                   //If not, it continues
 				} else {
-					this.manualLift(velocity);
+					manualLift(velocity);
 				}
 				
 			} else if (velocity < 0) {
 				
 				if (lowLimit.get() == false) {              
-					this.manualLift(0.0);
+					manualLift(0.0);
 				} else {
-					this.manualLift(velocity);              //Checks if low limit switch is pressed if negative value
+					manualLift(velocity);              //Checks if low limit switch is pressed if negative value
 				}                                           //If not, it continues
 				
 			} else {
-				this.manualLift(0.0);                       //If value is not greater or less, then it is 0, meaning a stop
+				manualLift(0.0);                       //If value is not greater or less, then it is 0, meaning a stop
 			}
 	}
 	
-	public void moveLow() {
+	public  static void moveLow() {
 		while(lowLimit.get()) {
-			this.manualLift(-1.0);
+			manualLift(-1.0);
 		}
-		this.manualLift(0.0);
+		manualLift(0.0);
 	}
 	
 	

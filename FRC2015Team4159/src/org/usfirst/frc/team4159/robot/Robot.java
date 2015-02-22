@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	
@@ -37,6 +38,7 @@ public class Robot extends IterativeRobot {
     	mainDrive.invertMotor("rearRight", true);
     	mainDrive.invertMotor("frontRight", true);
     	mainDrive.invertMotor("leftSide", true);
+    	gyro.reset();
     }
     
     public void autonomousInit() {
@@ -47,12 +49,15 @@ public class Robot extends IterativeRobot {
     	gyroAngle = gyro.getAngle();
     	mainDrive.notMainDrive.drive(0.5, -gyroAngle*Kp);
     }
-
     public void teleopInit() {
+    	gyro.reset();
     	
     }
     
     public void teleopPeriodic() {
+    	gyroAngle = gyro.getAngle();
+    	SmartDashboard.putNumber("Current gyro angle", gyroAngle);
+    	
     	System.out.println("teleop Looped!");
     	if (leftStick.getRawButton(3)) { //Changes to tank
     		mainDrive.octoShift(false);
@@ -81,11 +86,13 @@ public class Robot extends IterativeRobot {
     }
     
     public void testInit() {
-    	
+    	gyro.reset();
     	
     }
     
     public void testPeriodic() {
+    	gyroAngle = gyro.getAngle();
+    	SmartDashboard.putNumber("Current gyro angle", gyroAngle);
     }	
     public void disabledInit() {                                            //Reset PID
     }
