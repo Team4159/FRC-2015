@@ -4,8 +4,8 @@ package org.usfirst.frc.team4159.robot;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SensorBase;
 
-public static final byte ITG3200_ADDR0 = 0b01101000;
-public static final byte ITG3200_ADDR1 = 0b01101001;
+//public static final byte ITG3200_ADDR0 = 0b01101000;
+//public static final byte ITG3200_ADDR1 = 0b01101001;
 
 
 
@@ -14,7 +14,7 @@ public static final byte ITG3200_ADDR1 = 0b01101001;
 public class test_ITG3200 extends SensorBase {
 	
 	/* ************************ Register map for the ITG3200 ****************************/
-	public static final byte ITG_ADDR  =  0xD0; //0xD0 if tied low, 0xD2 if tied high
+//	public static final byte ITG_ADDR    =0xD0; //0xD0 if tied low, 0xD2 if tied high
 
 	public static final byte WHO_AM_I    =0x00;
 	public static final byte SMPLRT_DIV  =0x15;
@@ -54,10 +54,10 @@ public class test_ITG3200 extends SensorBase {
 	public static final byte PWR_MGM_STBY_Y  =(1<<4);
 	public static final byte PWR_MGM_STBY_X  =(1<<5);
 	public static final byte PWR_MGM_SLEEP   =(1<<6);
-	public static final byte PWR_MGM_H_RESET =(1<<7);
+//	public static final byte PWR_MGM_H_RESET =(1<<7);
 
 	//Interrupt Configuration Bist
-	public static final byte INT_CFG_ACTL    =(1<<7);
+//	public static final byte INT_CFG_ACTL    =(1<<7);
 	public static final byte INT_CFG_OPEN    =(1<<6);
 	public static final byte INT_CFG_LATCH_INT_EN =   (1<<5);
 	public static final byte INT_CFG_INT_ANYRD   =(1<<4);
@@ -73,8 +73,8 @@ public class test_ITG3200 extends SensorBase {
 		itg_addr = address; itg_port = port;
 		itg_I2C = new I2C(itg_port,(int)itg_addr);
 	}
-	public byte write(byte register_addr, byte value){
+//	public byte write(byte register_addr, byte value){
 		
 		
-	}
+	//}
 }
