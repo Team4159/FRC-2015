@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 //Hopefully PID-free class for the toteLifter
 public class ToteLifter {
-	static Victor leftLifter;
-	static Victor rightLifter;
+	Victor leftLifter;
+	Victor rightLifter;
 	
-	static DigitalInput lowLimit;
-	static DigitalInput topLimit; 
+	DigitalInput lowLimit;
+	DigitalInput topLimit; 
 	
 	public ToteLifter(Victor leftMotor, Victor rightMotor) { //Motor inputs are declared
 		leftLifter = leftMotor;
@@ -24,12 +24,12 @@ public class ToteLifter {
 		
 	}
 	
-	public static void manualLift(double velocity) {               //Moves the elevator WITHOUT regards to the touch sensors
+	public void manualLift(double velocity) {               //Moves the elevator WITHOUT regards to the touch sensors
 		leftLifter.set(-velocity);							//WARNING: Motors can overshoot
 		rightLifter.set(velocity);
 	}
 	
-	public static void setHighLow(DigitalInput lowSensor, DigitalInput topSensor) {
+	public void setHighLow(DigitalInput lowSensor, DigitalInput topSensor) {
 		lowLimit = lowSensor;                               //Sensor input objects passed over to be set
 		topLimit = topSensor;
 		
@@ -42,7 +42,7 @@ public class ToteLifter {
 		
 	}
 	
-	public static void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
+	public void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
 			if (velocity > 0) {
 				
 				if (topLimit.get() == false) {              //Checks if top limit switch is pressed if positive value
@@ -64,7 +64,7 @@ public class ToteLifter {
 			}
 	}
 	
-	public  static void moveLow() {
+	public void moveLow() {
 		while(lowLimit.get()) {
 			manualLift(-1.0);
 		}
