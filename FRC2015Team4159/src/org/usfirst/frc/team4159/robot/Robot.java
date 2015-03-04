@@ -26,6 +26,8 @@ public class Robot extends IterativeRobot {
     
     GyroITG3200 mainGyro = new GyroITG3200(I2C.Port.kOnboard);
     gyroSampler averageGyro = new gyroSampler(mainGyro);
+    GyroManager gyroInterfacer = new GyroManager(averageGyro);
+
     
 //    DigitalOutput testLED =  new DigitalOutput(0);
     
@@ -50,15 +52,14 @@ public class Robot extends IterativeRobot {
     
     public void autonomousPeriodic() {
 
-    	mainDrive.notMainDrive.drive(0.5, -gyroAngle*Kp);
     }
     public void teleopInit() {
-    	averageGyro.startGyro();
+    	gyroInterfacer.startGyro(); //Starts thread for use
     }
     
     public void teleopPeriodic() {
     	//TEST GYRO CODE//
-    	SmartDashboard.putNumber("Gyro Value", averageGyro.get_angle());
+    	SmartDashboard.putNumber("Gyro Z Value", gyroInterfacer.getAngle());
     	//TEST GYRO CODE//
     	System.out.println("teleop Looped!");
     	if (leftStick.getRawButton(3)) { //Changes to tank
@@ -93,9 +94,11 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    	SmartDashboard.putNumber("Current gyro angle", gyroAngle);
+    	
     }	
-    public void disabledInit() {                                            //Reset PID
-    	averageGyro.stopGyro();
+    
+    public void disabledInit() {
+    	gyroInterfacer.stopGyro(); //Stops thread when not in use
+    	
     }
 }
