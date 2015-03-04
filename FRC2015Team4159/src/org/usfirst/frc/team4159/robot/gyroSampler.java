@@ -50,7 +50,7 @@ public class gyroSampler implements Runnable {
 				avg_result= avg_sum/smpl_per_avg;
 				angle_change = avg_result/smpl_per_sec;
 				tmp_angle += angle_change;
-				gyro_angle = (tmp_angle);//fix
+				gyro_angle = (tmp_angle);//fix for stuff later
 				//gyroLoop.sleep(1000/N_AVG_SMPL_PER_SEC);
 			//}
 		}
@@ -69,6 +69,9 @@ public class gyroSampler implements Runnable {
 	
 	public void pauseGyro(){
 	}
-	public int get_angle
+	public int get_angle(){
+		return gyro_angle;
+		
+	}
 	
 }
