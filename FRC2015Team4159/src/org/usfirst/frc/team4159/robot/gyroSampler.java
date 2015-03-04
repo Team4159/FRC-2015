@@ -34,11 +34,10 @@ public class gyroSampler implements Runnable {
 		//smpl_buf = new short[N_AVG_SMPL_PER_SEC];
 		int angle_change=0;
 		gyro_angle = 0;
+		mainGyro.initialize();
 		while(isLoopRunning){
 			//ETHAN, do your gyro sampling magic over here 
 			//(remember this is a while loop though)
-			mainGyro.initialize();
-			//for(int smpl_n=0;smpl_n<smpl_buf.length;smpl_n++){
 				short avg_result=0;
 				int avg_sum=0;
 				tmp_angle=gyro_angle;
@@ -50,9 +49,8 @@ public class gyroSampler implements Runnable {
 				avg_result= avg_sum/smpl_per_avg;
 				angle_change = avg_result/smpl_per_sec;
 				tmp_angle += angle_change;
-				gyro_angle = (tmp_angle);//fix for stuff later
-				//gyroLoop.sleep(1000/N_AVG_SMPL_PER_SEC);
-			//}
+				gyro_angle = raw_angle_convert(tmp_angle);//fix for stuff later
+
 		}
 		
 	}
@@ -71,7 +69,14 @@ public class gyroSampler implements Runnable {
 	}
 	public int get_angle(){
 		return gyro_angle;
-		
+	}
+	private int raw_angle_convert(int raw_angle){
+		//convert from a raw int angle to a simple angle between 0-360
+		int out_angle=0;
+		int abs_raw_angle = (raw_angle>=0)?raw_angle:(0-raw_angle);
+		abs_raw_angle %= 360;
+		out_angle = (raw_angle>=0) ? abs_raw_angle:(360-abs_raw_angle);
+		return out_angle;
 	}
 	
 }
