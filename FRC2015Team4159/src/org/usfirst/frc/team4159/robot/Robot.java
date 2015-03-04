@@ -3,6 +3,7 @@ package org.usfirst.frc.team4159.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,7 +14,6 @@ public class Robot extends IterativeRobot {
 	
     DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);
     DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);
-    Gyro gyro = new Gyro(0);
     OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet);
 
     Joystick leftStick = new Joystick(1);
@@ -24,12 +24,15 @@ public class Robot extends IterativeRobot {
     Victor rightLifter = new Victor(5);
     ToteLifter elevator = new ToteLifter(leftLifter, rightLifter);
     
+    GyroITG3200 mainGyro = new GyroITG3200(I2C.Port.kOnboard);
+    gyroSampler averageGyro = new gyroSampler(mainGyro);
+    
 //    DigitalOutput testLED =  new DigitalOutput(0);
     
     DigitalInput lowSensor = new DigitalInput(8);
     DigitalInput topSensor = new DigitalInput(9);
     
-    Double gyroAngle;
+    int gyroAngle;
     Double Kp = 0.3;
     
     public void robotInit() {
@@ -38,26 +41,25 @@ public class Robot extends IterativeRobot {
     	mainDrive.invertMotor("rearRight", true);
     	mainDrive.invertMotor("frontRight", true);
     	mainDrive.invertMotor("leftSide", true);
-    	gyro.reset();
+
     }
     
     public void autonomousInit() {
-    	gyro.reset();
+
     }
     
     public void autonomousPeriodic() {
-    	gyroAngle = gyro.getAngle();
+
     	mainDrive.notMainDrive.drive(0.5, -gyroAngle*Kp);
     }
     public void teleopInit() {
-    	gyro.reset();
-    	
+    	averageGyro.startGyro();
     }
     
     public void teleopPeriodic() {
-    	gyroAngle = gyro.getAngle();
-    	SmartDashboard.putNumber("Current gyro angle", gyroAngle);
-    	
+    	//TEST GYRO CODE//
+    	SmartDashboard.putNumber("Gyro Value", averageGyro.get_angle());
+    	//TEST GYRO CODE//
     	System.out.println("teleop Looped!");
     	if (leftStick.getRawButton(3)) { //Changes to tank
     		mainDrive.octoShift(false);
@@ -86,14 +88,14 @@ public class Robot extends IterativeRobot {
     }
     
     public void testInit() {
-    	gyro.reset();
+
     	
     }
     
     public void testPeriodic() {
-    	gyroAngle = gyro.getAngle();
     	SmartDashboard.putNumber("Current gyro angle", gyroAngle);
     }	
     public void disabledInit() {                                            //Reset PID
+    	averageGyro.stopGyro();
     }
 }

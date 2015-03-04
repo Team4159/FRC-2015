@@ -44,10 +44,13 @@ public class gyroSampler implements Runnable {
 				for(int avg_n=0;avg_n<smpl_per_avg;avg_n++){
 					short rZ = mainGyro.getRotationZ();
 					avg_sum += rZ;
-					gyroLoop.sleep(1000/(smpl_per_avg*smpl_per_sec));
+					try {
+						Thread.sleep(1000/(smpl_per_avg*smpl_per_sec));
+					} catch (InterruptedException e) {
+					}
 				}
-				avg_result= avg_sum/smpl_per_avg;
-				angle_change = avg_result/smpl_per_sec;
+				avg_result= (short) (avg_sum/smpl_per_avg);
+				angle_change = (short) (avg_result/smpl_per_sec);
 				tmp_angle += angle_change;
 				gyro_angle = raw_angle_convert(tmp_angle);//fix for stuff later
 
