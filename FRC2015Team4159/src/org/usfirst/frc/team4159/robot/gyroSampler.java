@@ -6,13 +6,12 @@ public class gyroSampler implements Runnable {
 
 	private GyroITG3200 mainGyro; 
 	private volatile boolean isLoopRunning;
-	private Thread gyroLoop;
 	private volatile int gyro_angle;
 	private volatile int tmp_angle;
 	private volatile short raw_angle;
 	private static final int N_AVG_SMPL_PER_SEC	=	10;
 	private static final int N_SMPL_PER_AVG		=	10;
-	
+	private volatile boolean reset_angle_b = true;
 	private int smpl_per_sec;
 	private int smpl_per_avg;
 	//private short[] avg_buf;
@@ -24,7 +23,7 @@ public class gyroSampler implements Runnable {
 		mainGyro = gyro;
 	}
  	public gyroSampler(GyroITG3200 gyro,int smpl_per_s,int smpl_per_a){
- 		//this can take parameters for smple count settings
+ 		//this can take parameters for sample count settings
  		smpl_per_sec=smpl_per_s;
  		smpl_per_avg=smpl_per_a;
  		mainGyro = gyro;
@@ -35,8 +34,10 @@ public class gyroSampler implements Runnable {
 		//smpl_buf = new short[N_AVG_SMPL_PER_SEC];
 		int angle_change=0;
 		gyro_angle = 0;
+		long smpl_delay_ms = (long)(1000/(smpl_per_avg*smpl_per_sec));
 		mainGyro.initialize();
 		while(isLoopRunning){
+			SmartDashboard.putBoolean("If Thread Active", true);
 			//ETHAN, do your gyro sampling magic over here 
 			//(remember this is a while loop though)
 				short avg_result=0;
@@ -47,23 +48,29 @@ public class gyroSampler implements Runnable {
 					avg_sum += rZ;
 					raw_angle = rZ;
 					try {
-						Thread.sleep(1000/(smpl_per_avg*smpl_per_sec));
+						//Thread.sleep(1000/(smpl_per_avg*smpl_per_sec));
+						Thread.sleep(smpl_delay_ms);
 					} catch (InterruptedException e) {
 					}
 				}
-				avg_result= (short) (avg_sum/smpl_per_avg);
+				avg_result = (short) (avg_sum/smpl_per_avg);
 				angle_change = (int) (avg_result/smpl_per_sec);
 				tmp_angle += angle_change;
+//				if(!reset_angle_b){
 				gyro_angle = raw_angle_convert(tmp_angle);//fix for stuff later
-				
+//					SmartDashboard.putBoolean("Is resetting", false);
+//				} else {
+//					gyro_angle = 0;
+//					reset_angle_b = false;
+//					SmartDashboard.putBoolean("Is resetting", true);
+//				}
 //				SmartDashboard.putNumber("Gyro Value from Thread", gyro_angle);
 //				SmartDashboard.putNumber("Gyro Raw Value form Thread", raw_angle);
-			
+				SmartDashboard.putBoolean("If Thread Active", false);
 		}
-		
 	}
 	
-	public void startGyro() {
+	public void gyroInit() {
 		isLoopRunning = true;
 		
 	}
@@ -92,4 +99,8 @@ public class gyroSampler implements Runnable {
 		return out_angle;
 	}
 	
+	public void reset(){
+		//reset_angle_b = true;
+		gyro_angle = 0;
+	}
 }

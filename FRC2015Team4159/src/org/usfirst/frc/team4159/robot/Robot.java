@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
 public class Robot extends IterativeRobot {
 	
     DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);
@@ -25,9 +26,9 @@ public class Robot extends IterativeRobot {
     ToteLifter elevator = new ToteLifter(leftLifter, rightLifter);
     
     GyroITG3200 mainGyro = new GyroITG3200(I2C.Port.kOnboard);
-    gyroSampler averageGyro = new gyroSampler(mainGyro);
+    gyroSampler averageGyro = new gyroSampler(mainGyro, 25, 10);
     GyroManager gyroInterfacer = new GyroManager(averageGyro);
-
+    boolean ifFirstLoop;
     
 //    DigitalOutput testLED =  new DigitalOutput(0);
     
@@ -54,14 +55,13 @@ public class Robot extends IterativeRobot {
 
     }
     public void teleopInit() {
-    	gyroInterfacer.startGyro(); //Starts thread for use
+    	gyroInterfacer.startGyro();
     }
     
     public void teleopPeriodic() {
     	//TEST GYRO CODE//
     	SmartDashboard.putNumber("Gyro Z Value", gyroInterfacer.getAngle());
     	//TEST GYRO CODE//
-    	System.out.println("teleop Looped!");
     	if (leftStick.getRawButton(3)) { //Changes to tank
     		mainDrive.octoShift(false);
     	}
@@ -98,7 +98,7 @@ public class Robot extends IterativeRobot {
     }	
     
     public void disabledInit() {
-    	gyroInterfacer.stopGyro(); //Stops thread when not in use
+    	
     	
     }
 }
