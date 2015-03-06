@@ -20,8 +20,8 @@ public class IO {
 	}
 	
 	public static ToteLifter elevator = new ToteLifter(4, 5);					  //ToteLifter Declarations
-	public static DigitalInput lowLimit = new DigitalInput(0);
-	public static DigitalInput highLimit = new DigitalInput(1);
+	public static DigitalInput lowLimit = new DigitalInput(8);
+	public static DigitalInput highLimit = new DigitalInput(9);
 	static {
 		elevator.setHighLow(lowLimit, highLimit);
 	}
