@@ -16,7 +16,7 @@ public class AutoMethods {
 	private static final int PICK_TWO_TOTE_SKIP = 3;
 	private static final int PICK_TWO_TOTE_NOSKIP = 4;
 	private static final int PICK_THREE_TOTE = 5;
-	private static final int GTFO_TOTE = 6;
+	private static final int NOCONTAINER_TOTE = 6;
 	
 	double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
 	double rejoinRouteTime = 3.0; 
@@ -36,13 +36,13 @@ public class AutoMethods {
 		autoChooser.addObject("2 Tote Pickup(Skip)", new Integer(PICK_TWO_TOTE_SKIP));       //need objects
 		autoChooser.addObject("2 Tote Pickup(No skip)", new Integer(PICK_TWO_TOTE_NOSKIP));
 		autoChooser.addObject("3 Tote Pickup", new Integer(PICK_THREE_TOTE));
-		autoChooser.addObject("Straight Shot 3 Tote Pickup", new Integer(GTFO_TOTE));
+		autoChooser.addObject("Straight Shot 3 Tote Pickup", new Integer(NOCONTAINER_TOTE));
 	}
 	
 	
 	
 	public int getChoice() {
-		return (((Integer)autoChooser.getSelected()).intValue());       //Returns integer value of the chosen autonomus mode UNBOXED
+		return (((Integer) autoChooser.getSelected()).intValue());       //Returns integer value of the chosen autonomus mode UNBOXED
 	}
 	
 
@@ -50,65 +50,8 @@ public class AutoMethods {
 	
 	
 	
-	public void autoLoop() {
-		boolean isStage1Enabled;                                             //Variables control the behavior of autonomous based on choices
-		boolean isStage2Enabled;
-		boolean isStage3Enabled;
-		boolean ifGTFO;
-		boolean isMoveOnly;
-		
-		switch(this.getChoice()) { //Gets choice from SmartDashboard
-			case MOVE_ONLY:
-				isStage1Enabled=false;
-				isStage2Enabled=false;
-				isStage3Enabled=false;
-				ifGTFO=false;
-				isMoveOnly = true;
-				break;
-			case PICK_ONE_TOTE:
-				isStage1Enabled=true;
-				isStage2Enabled=false;
-				isStage3Enabled=false;
-				ifGTFO=false;
-				isMoveOnly = false;
-				break;
-			case PICK_TWO_TOTE_SKIP:
-				isStage1Enabled=true;
-				isStage2Enabled=false;
-				isStage3Enabled=true;
-				ifGTFO=false;
-				isMoveOnly = false;
-				break;
-			case PICK_TWO_TOTE_NOSKIP:
-				isStage1Enabled=true;
-				isStage2Enabled=true;
-				isStage3Enabled=false;
-				ifGTFO=false;
-				isMoveOnly = false;
-				break;
-			case PICK_THREE_TOTE:
-				isStage1Enabled=true;
-				isStage2Enabled=true;
-				isStage3Enabled=true;
-				ifGTFO=false;
-				isMoveOnly = false;
-				break;
-			case GTFO_TOTE:
-				isStage1Enabled=false;
-				isStage2Enabled=false;
-				isStage3Enabled=false;
-				ifGTFO=true;
-				isMoveOnly = false;
-				break;
-			default:
-				isStage1Enabled=false;
-				isStage2Enabled=false;
-				isStage3Enabled=false;
-				ifGTFO=false;
-				isMoveOnly = true;
-				break;
-		}
+	
 	 
-	}
+	
 	
 }

@@ -7,19 +7,13 @@ import edu.wpi.first.wpilibj.Victor;
 import java.lang.Math;
 
 public class OctoDrive {
-	
-//	private PIDVictor frontLeft;
-//	private PIDVictor rearLeft;
-//	private PIDVictor frontRight;
-//	private PIDVictor rearRight;
-	
-	//PROVISIONAL//
+
+
 	private Victor frontLeft;
 	private Victor rearLeft;
 	private Victor frontRight;
 	private Victor rearRight;
-	//PROVISIONAL//
-	
+		
 	private DrivePistons octoShift;
 	
 	private boolean isMecanum;
@@ -60,11 +54,11 @@ public class OctoDrive {
 	}
 	
 	
-	public void manualDrive(Joystick driveStick, Joystick turnStick){
+	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2){
 		if (isMecanum) {
-			double right = driveStick.getX();
-			double forward = -driveStick.getY();
-			double clockwise = turnStick.getX();
+			double right = xVal1;
+			double forward = yVal1;
+			double clockwise = xVal2;
 		
 			double front_left = forward + clockwise + right;
 			double front_right = forward - clockwise - right;
@@ -103,21 +97,16 @@ public class OctoDrive {
 				rear_right = -rear_right;
 			}
 		
-//			frontLeft.pidSet(front_left);
-//			rearLeft.pidSet(rear_left);
-//			frontRight.pidSet(front_right);
-//			rearRight.pidSet(rear_right);
-			
-			//PROVISIONAL//
+
 			frontLeft.set(front_left);
 			rearLeft.set(rear_left);
 			frontRight.set(front_right);
 			rearRight.set(rear_right);
-			//PROVISIONAL//
+
 			
 		} else {
-			double leftVelocity = driveStick.getY();
-			double rightVelocity = turnStick.getY();
+			double leftVelocity = yVal1;
+			double rightVelocity = yVal2;
 			
 			if(leftSideInverted) {
 				leftVelocity = -leftVelocity;
@@ -126,17 +115,12 @@ public class OctoDrive {
 				rightVelocity = -rightVelocity;
 			}
 			
-//			frontLeft.pidSet(leftVelocity);
-//			rearLeft.pidSet(leftVelocity);
-//			frontRight.pidSet(rightVelocity);
-//			rearRight.pidSet(rightVelocity);
-			
-			//PROVISIONAL//
+
 			frontLeft.set(leftVelocity);
 			rearLeft.set(leftVelocity);
 			frontRight.set(rightVelocity);
 			rearRight.set(rightVelocity);
-			//PROVISIONAL//
+			
 		}
 	}
 	
@@ -165,38 +149,5 @@ public class OctoDrive {
 				break;
 		}
 	}
+}	
 	
-	
-//	public void autoMecanumDrive(double velocity, boolean ifDriveStraight) {
-//		if (ifDriveStraight) {
-//			autoVelocity=velocity;
-//			ifForward=true;
-//		}
-//	}
-//	
-//	public void autoStop() {
-//		ifForward=false;
-//		ifSideways=false;
-//		autoVelocity=0.0;
-//	}
-//
-//	
-//	public void run() {
-//		double gyroAngle;
-//		while (ds.isEnabled()) {
-//			gyroAngle = gyro.getAngle();
-//			if (ifForward) {
-//				notMainDrive.drive(autoVelocity, -gyroAngle*Kp);
-//			} else {
-//				notMainDrive.drive(0.0, 0.0);
-//			}
-//		
-//		}
-//	}
-//	
-//	public void startAutoThread() {
-//		gyro.reset();
-//		Thread autoThread = new Thread(this);
-//		autoThread.start();
-//	}
-}

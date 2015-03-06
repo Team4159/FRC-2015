@@ -4,18 +4,12 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class DriveWheels {
 	
-//	public PIDVictor frontLeftMotor;
-//	public PIDVictor rearLeftMotor;
-//	public PIDVictor frontRightMotor;
-//	public PIDVictor rearRightMotor;
-//	
-	
-	//PROVISIONAL//
+
 	public Victor frontLeftMotor;
 	public Victor rearLeftMotor;
 	public Victor frontRightMotor;
 	public Victor rearRightMotor;
-	//PROVISIONAL//
+
 	
 	public DriveWheels(Victor frontLeft, Victor rearLeft, Victor frontRight, Victor rearRight) {
 		frontLeftMotor = frontLeft;

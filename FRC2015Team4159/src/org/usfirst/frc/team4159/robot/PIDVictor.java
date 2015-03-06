@@ -52,6 +52,7 @@ public class PIDVictor extends Victor {
 	
 	public void pidStop() { //KILLS DA PID
 		motorPID.reset();
+		pidEncoder.reset();
 		
 	}
 	
