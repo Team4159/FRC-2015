@@ -13,8 +13,8 @@ public class GyroManager {
 	public void startGyro() {
 		if (!gyroLoop.isAlive()){
 		gyroFunction.gyroInit();
-		gyroLoop.start(); }
-//		} else {
+		gyroLoop.start(); 
+		} //else {
 //			gyroFunction.reset();
 //			
 //		}

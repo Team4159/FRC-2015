@@ -6,10 +6,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class AutoMethods {
-	private NetworkTable table;
-	private OctoDrive mainDrive;
-	private ToteLifter mainElevator;
-	private DigitalInput toteSensor;
+
 	
 	private static final int MOVE_ONLY = 1;                                                   //Values used to tell which auto mode is chosen
 	private static final int PICK_ONE_TOTE = 2;
@@ -24,12 +21,7 @@ public class AutoMethods {
 	
 	SendableChooser autoChooser;
 	
-	public AutoMethods(OctoDrive mainDriveTemp, ToteLifter Elevator) {
-		table = NetworkTable.getTable("");                              //Initializes the table under name ""
-		mainDrive = mainDriveTemp;										//Gets the octoCanum class to drive
-		mainElevator = Elevator;                                        //Gets the elevator class to lift
-		toteSensor = new DigitalInput(12);                              //Tells if tote is inside the robot
-		
+	public AutoMethods() {
 		autoChooser = new SendableChooser();                            //Initializes the autonomous chooser
 		autoChooser.addDefault("Move Only", new Integer(MOVE_ONLY));                              //Adds the options
 		autoChooser.addObject("1 Tote Pickup", new Integer(PICK_ONE_TOTE));                //You have to BOX the integers as the parameter for addDefault and addObject
@@ -46,7 +38,17 @@ public class AutoMethods {
 	}
 	
 
-	
+	public void toteAim() {
+		double offset = 0.0;
+		IO.imageValues.retrieveValue("XOffset", offset);
+		
+		while (offset >= 0 && offset <=10) {
+			IO.mainDrive.manualDrive(-0.5, 0.0, 0.0, 0.0);
+			IO.imageValues.retrieveValue("XOffset", offset);
+		}
+		
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+	}
 	
 	
 	

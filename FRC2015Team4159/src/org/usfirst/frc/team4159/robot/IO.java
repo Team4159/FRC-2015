@@ -3,6 +3,7 @@ package org.usfirst.frc.team4159.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class IO {
 	public static Joystick leftStick = new Joystick(1);                           //Joystick Declaration
@@ -28,4 +29,11 @@ public class IO {
 	
 	public static GyroManager mainGyro = new GyroManager(new gyroSampler          //Gyro Declaration
 				(new GyroITG3200(I2C.Port.kOnboard)));
+	
+	
+	public static NetworkTable imageValues;											  //RoboRealm NetworkTable Declaration
+	static {
+		imageValues = NetworkTable.getTable("");
+	}
+	
 }
