@@ -36,16 +36,23 @@ public class Robot extends IterativeRobot {
 //    DigitalInput topSensor = new DigitalInput(9);
 //    
     
+	boolean isFirstAutoLoop;
+	
     public void robotInit() {
     	
     }
     
     public void autonomousInit() {
-
+    	isFirstAutoLoop = true;
+    	IO.mainGyro.startGyro();
     }
     
     public void autonomousPeriodic() {
-
+    	if (isFirstAutoLoop) {
+    		AutoMethods.instance.autoStraightDrive(0.5, 3);
+    		
+    		isFirstAutoLoop = false;
+    	}
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();

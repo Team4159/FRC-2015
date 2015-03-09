@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class AutoMethods {
 
+	public static AutoMethods instance = new AutoMethods();
 	
 	private static final int MOVE_ONLY = 1;                                                   //Values used to tell which auto mode is chosen
 	private static final int PICK_ONE_TOTE = 2;
@@ -15,17 +16,20 @@ public class AutoMethods {
 	private static final int PICK_THREE_TOTE = 5;
 	private static final int NOCONTAINER_TOTE = 6;
 	
-	double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
-	double rejoinRouteTime = 3.0; 
-	double liftTime = 1.0;
+	private static Timer autoTime;
+	
+	private double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
+	private double rejoinRouteTime = 3.0; 
+	private double liftTime = 1.0;
+	private double Kp = 0.3;				//tune for gyro
 	
 	SendableChooser autoChooser;
 	
 	public AutoMethods() {
-		autoChooser = new SendableChooser();                            //Initializes the autonomous chooser
-		autoChooser.addDefault("Move Only", new Integer(MOVE_ONLY));                              //Adds the options
-		autoChooser.addObject("1 Tote Pickup", new Integer(PICK_ONE_TOTE));                //You have to BOX the integers as the parameter for addDefault and addObject
-		autoChooser.addObject("2 Tote Pickup(Skip)", new Integer(PICK_TWO_TOTE_SKIP));       //need objects
+		autoChooser = new SendableChooser();                            					//Initializes the autonomous chooser
+		autoChooser.addDefault("Move Only", new Integer(MOVE_ONLY));                        //Adds the options
+		autoChooser.addObject("1 Tote Pickup", new Integer(PICK_ONE_TOTE));                 //You have to BOX the integers as the parameter for addDefault and addObject
+		autoChooser.addObject("2 Tote Pickup(Skip)", new Integer(PICK_TWO_TOTE_SKIP));      //need objects
 		autoChooser.addObject("2 Tote Pickup(No skip)", new Integer(PICK_TWO_TOTE_NOSKIP));
 		autoChooser.addObject("3 Tote Pickup", new Integer(PICK_THREE_TOTE));
 		autoChooser.addObject("Straight Shot 3 Tote Pickup", new Integer(NOCONTAINER_TOTE));
@@ -50,7 +54,13 @@ public class AutoMethods {
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
 	}
 	
-	
+	public void autoStraightDrive(double speed, double durationInSeconds) {
+		autoTime.start();
+		while (!autoTime.hasPeriodPassed(durationInSeconds)){
+			IO.mainDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getAngle());
+		}
+		
+	}
 	
 	
 	 

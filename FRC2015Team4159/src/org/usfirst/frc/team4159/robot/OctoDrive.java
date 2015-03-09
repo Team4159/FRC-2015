@@ -25,7 +25,8 @@ public class OctoDrive {
 	private boolean rightSideInverted;
 	
 	
-	public RobotDrive notMainDrive;
+	public static RobotDrive autoDrive;
+	
 	
 	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
 		frontLeft = wheelSet.frontLeftMotor;
@@ -39,7 +40,7 @@ public class OctoDrive {
 		rearRightInverted = false;
 		
 		octoShift = pistonSet;
-		notMainDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
+		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
 	}
 	
 	
@@ -149,5 +150,6 @@ public class OctoDrive {
 				break;
 		}
 	}
+	
 }	
 	
