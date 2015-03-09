@@ -59,10 +59,30 @@ public class AutoMethods {
 		while (!autoTime.hasPeriodPassed(durationInSeconds)){
 			IO.mainDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getAngle());
 		}
-		
+		autoTime.stop();
+		autoTime.reset();
+		IO.mainDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
+	public void toteGet() {
+		while (IO.toteSensor.get()){
+			IO.mainDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getAngle());
+		}
+		
+		IO.mainDrive.autoDrive.drive(0.0, 0.0);
+	}
 	
+ 	public void toteSingleLift() {
+ 		IO.elevator.moveLow();
+ 		autoTime.start();
+ 		while (!autoTime.hasPeriodPassed(1.0)) {
+ 			IO.elevator.autoLift(1.0);
+ 		}
+ 		autoTime.stop();
+ 		autoTime.reset();
+ 		IO.elevator.autoLift(0.0);
+ 		
+ 	}
 	 
 	
 	
