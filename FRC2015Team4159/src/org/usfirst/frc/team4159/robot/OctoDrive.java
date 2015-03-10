@@ -25,7 +25,7 @@ public class OctoDrive {
 	private boolean rightSideInverted;
 	
 	
-	public static RobotDrive autoDrive;
+	public static RobotDrive autoDrive = new RobotDrive(0, 1, 2, 3); //For autonomous purposes
 	
 	
 	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
@@ -40,7 +40,6 @@ public class OctoDrive {
 		rearRightInverted = false;
 		
 		octoShift = pistonSet;
-		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
 	}
 	
 	
@@ -150,6 +149,5 @@ public class OctoDrive {
 				break;
 		}
 	}
-	
 }	
 	
