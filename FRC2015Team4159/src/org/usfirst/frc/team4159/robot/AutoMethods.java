@@ -18,10 +18,13 @@ public class AutoMethods {
 	
 	private static Timer autoTime;
 	
-	private double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
-	private double rejoinRouteTime = 3.0; 
-	private double liftTime = 1.0;
-	private double Kp = 0.3;				//tune for gyro
+	private static double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
+	private static double rejoinRouteTime = 3.0; 
+	private static double liftTime = 1.0;
+	private static double exitTime = 3.0;
+	private static double toteDropTime = 1.0;
+	
+	private static double Kp = 0.3;				//tune for gyro
 	
 	SendableChooser autoChooser;
 	
@@ -72,10 +75,10 @@ public class AutoMethods {
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
- 	public void toteSingleLift() {
+ 	public void toteTimedLift(double liftTime) {
  		IO.elevator.moveLow();
  		autoTime.start();
- 		while (!autoTime.hasPeriodPassed(1.0)) {
+ 		while (!autoTime.hasPeriodPassed(liftTime)) {
  			IO.elevator.autoLift(1.0);
  		}
  		autoTime.stop();
@@ -84,6 +87,24 @@ public class AutoMethods {
  		
  	}
 	 
+	public void continuedRoutine() {
+		toteAim();
+		toteGet();
+		toteTimedLift(liftTime);
+		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+		Timer.delay(rejoinRouteTime);
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+		autoStraightDrive(0.5, travelTime);
+	}
 	
-	
+	public void endRouteine() {
+		toteAim();
+		toteGet();
+		toteTimedLift(liftTime);
+		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+		Timer.delay(exitTime);
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+		IO.elevator.moveLow();
+		autoStraightDrive(-0.5, toteDropTime);
+	}
 }
