@@ -24,11 +24,17 @@ public class GyroManager {
 		gyroFunction.stopGyro();
 	}
 	
+	public void reset() {
+		gyroFunction.reset();
+	}
+	
 	public int getAngle(){
 		return gyroFunction.get_angle();
 		
 	}
 	
-	
+	public int getPidAngle() {
+		return gyroFunction.pidAngle();
+	}
 	
 }

@@ -106,5 +106,6 @@ public class gyroSampler implements Runnable {
 	public void reset(){
 		//reset_angle_b = true;
 		gyro_angle = 0;
+		tmp_angle = 0;
 	}
 }

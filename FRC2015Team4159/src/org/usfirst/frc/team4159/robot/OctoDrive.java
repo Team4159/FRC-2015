@@ -24,9 +24,7 @@ public class OctoDrive {
 	private boolean leftSideInverted;
 	private boolean rightSideInverted;
 	
-	
-	public static RobotDrive autoDrive = new RobotDrive(0, 1, 2, 3); //For autonomous purposes
-	
+	public static RobotDrive autoDrive;
 	
 	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
 		frontLeft = wheelSet.frontLeftMotor;
@@ -40,10 +38,12 @@ public class OctoDrive {
 		rearRightInverted = false;
 		
 		octoShift = pistonSet;
+		
+		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
 	}
 	
 	
-	public void octoShift(boolean state) {
+	public OctoDrive octoShift(boolean state) {
 		isMecanum = state;
 		if (isMecanum) {
 			octoShift.linearActuate(false);
@@ -51,6 +51,7 @@ public class OctoDrive {
 			octoShift.linearActuate(true);
 		}
 		
+		return this;
 	}
 	
 	
@@ -124,7 +125,7 @@ public class OctoDrive {
 		}
 	}
 	
-	public void invertMotor(String motorName, boolean isInverted) {
+	public OctoDrive invertMotor(String motorName, boolean isInverted) {
 		switch (motorName) {
 			case "frontLeft":
 				frontLeftInverted = isInverted;
@@ -148,6 +149,8 @@ public class OctoDrive {
 				System.out.println("No motors were inverted.");
 				break;
 		}
+		
+		return this;
 	}
 }	
 	

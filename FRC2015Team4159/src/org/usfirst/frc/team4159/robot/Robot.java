@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
     
     public void autonomousPeriodic() {
     	if (isFirstAutoLoop) {
-    		AutoMethods.instance.autoStraightDrive(0.5, 3);
+ //   		AutoMethods.instance.autoStraightDrive(0.5, 3);
     		
     		isFirstAutoLoop = false;
     	}
@@ -61,6 +61,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	//TEST GYRO CODE//
     	SmartDashboard.putNumber("Gyro Z Value", IO.mainGyro.getAngle());
+    	SmartDashboard.putNumber("Gyro Pid Value", IO.mainGyro.getPidAngle());
     	//TEST GYRO CODE//
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
     		IO.mainDrive.octoShift(false);
