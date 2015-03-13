@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4159.robot;
 
 import edu.wpi.first.wpilibj.Victor;
-
+//Gets all driving motors and groups them for easier and more convenient use
 public class DriveWheels {
 	
 

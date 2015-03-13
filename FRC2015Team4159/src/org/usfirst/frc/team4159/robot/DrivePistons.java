@@ -2,6 +2,8 @@ package org.usfirst.frc.team4159.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
+//takes in all pistons meant for the drivetrain and controls them in a more convenient way
+
 public class DrivePistons{
 	DoubleSolenoid piston1;
 	DoubleSolenoid piston2;
@@ -17,7 +19,7 @@ public class DrivePistons{
 		piston2 = new DoubleSolenoid(channel3, channel4);
 	}
 	
-	public void linearActuate(boolean isExtended){
+	public void linearActuate(boolean isExtended){      			//Actuates ALL pistons in unison
 		if (isExtended) {
 			piston1.set(DoubleSolenoid.Value.kForward);
 			piston2.set(DoubleSolenoid.Value.kForward);

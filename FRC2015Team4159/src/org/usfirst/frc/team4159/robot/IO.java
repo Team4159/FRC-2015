@@ -14,7 +14,7 @@ public class IO {
 	private static DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);		  
 	public static OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet)
 	.octoShift(true)
-	.invertMotor("rearRight", true) //YES THAT'S RIGHT 
+	.invertMotor("rearRight", true) //YES THAT'S RIGHT							  //Some method chaining to load class early on 
     .invertMotor("frontRight", true) 
     .invertMotor("leftSide", true);  
 
@@ -29,7 +29,7 @@ public class IO {
 				(new GyroITG3200(I2C.Port.kOnboard)));
 	
 	
-	public static NetworkTable imageValues;											  //RoboRealm NetworkTable Declaration
+	public static NetworkTable imageValues;										  //RoboRealm NetworkTable Declaration
 	static {
 		imageValues = NetworkTable.getTable("");
 	}

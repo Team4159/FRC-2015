@@ -26,7 +26,7 @@ public class OctoDrive {
 	
 	public static RobotDrive autoDrive;
 	
-	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {
+	public OctoDrive(DriveWheels wheelSet, DrivePistons pistonSet) {		//Takes in wheelseet and pistonSet parameters
 		frontLeft = wheelSet.frontLeftMotor;
 		rearLeft = wheelSet.rearLeftMotor;
 		frontRight = wheelSet.frontRightMotor;
@@ -39,11 +39,11 @@ public class OctoDrive {
 		
 		octoShift = pistonSet;
 		
-		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
+		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight); //For autonomous driving turning method
 	}
 	
 	
-	public OctoDrive octoShift(boolean state) {
+	public OctoDrive octoShift(boolean state) { //Changes boolean value for mecanum/tank state. The code will react accordingly
 		isMecanum = state;
 		if (isMecanum) {
 			octoShift.linearActuate(false);
@@ -51,12 +51,12 @@ public class OctoDrive {
 			octoShift.linearActuate(true);
 		}
 		
-		return this;
+		return this; //For method chaining
 	}
 	
 	
-	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2){
-		if (isMecanum) {
+	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2){ //Drives the robot in a mecanum/tank mode
+		if (isMecanum) { //Mecanum driving code															 //according to the boolean value isMecanum
 			double right = xVal1;
 			double forward = yVal1;
 			double clockwise = xVal2;
@@ -84,7 +84,7 @@ public class OctoDrive {
 				rear_right/=max;
 			}
 			
-			if(frontLeftInverted) {
+			if(frontLeftInverted) {										//Motor inversion
 				front_left = -front_left;
 				
 			}
@@ -105,7 +105,7 @@ public class OctoDrive {
 			rearRight.set(rear_right);
 
 			
-		} else {
+		} else { //Tank driving code
 			double leftVelocity = yVal1;
 			double rightVelocity = yVal2;
 			
@@ -125,13 +125,13 @@ public class OctoDrive {
 		}
 	}
 	
-	public OctoDrive invertMotor(String motorName, boolean isInverted) {
-		switch (motorName) {
-			case "frontLeft":
+	public OctoDrive invertMotor(String motorName, boolean isInverted) { //Motor inversion method, changes boolean value 
+		switch (motorName) {											 //to indicated a motor's inversion, the driving code
+			case "frontLeft":											 //Will react accordingly
 				frontLeftInverted = isInverted;
-				break;
-			case "rearleft":
-				rearLeftInverted = isInverted;
+				break;													 //Note: the frontLeft, rearLeft... etc methods are for
+			case "rearleft":											 //Mecanum inversion, leftSide and rightSide for tank		
+				rearLeftInverted = isInverted;							 //Motor inversion
 				break;
 			case "frontRight":
 				frontRightInverted = isInverted;
@@ -150,7 +150,7 @@ public class OctoDrive {
 				break;
 		}
 		
-		return this;
+		return this; //For method chaining 
 	}
 }	
 	

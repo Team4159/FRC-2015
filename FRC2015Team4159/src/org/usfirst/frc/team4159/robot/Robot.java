@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
     }
     
     public void autonomousInit() {
-    	isFirstAutoLoop = true;
+    	isFirstAutoLoop = true;													//Starts gyro and sets prepares autonomous modes
     	IO.mainGyro.startGyro();
     }
     
@@ -55,7 +55,7 @@ public class Robot extends IterativeRobot {
     	}
     }
     public void teleopInit() {
-    	IO.mainGyro.startGyro();
+    	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
     }
     
     public void teleopPeriodic() {
@@ -70,18 +70,19 @@ public class Robot extends IterativeRobot {
     		IO.mainDrive.octoShift(true);
     	}
     	
-    	IO.mainDrive.manualDrive(IO.leftStick.getX(), IO.leftStick.getY(), IO.rightStick.getX(), IO.rightStick.getY()); //Drives according to tank/mecanum
+    	IO.mainDrive.manualDrive(IO.leftStick.getX(), IO.leftStick.getY(), 
+    			IO.rightStick.getX(), IO.rightStick.getY()); 				  //Drives according to tank/mecanum boolean in OctoDrive
         
-    	if (IO.secondaryStick.getRawButton(3)){
+    	if (IO.secondaryStick.getRawButton(3)){								  //Moves elevator up
     		IO.elevator.autoLift(1.0);          
     	} 
-    	else if (IO.secondaryStick.getRawButton(2)){
+    	else if (IO.secondaryStick.getRawButton(2)){						  //Moves elevator down
     		IO.elevator.autoLift(-1.0);
     	} else {
-    		IO.elevator.autoLift(0.0);
+    		IO.elevator.autoLift(0.0);										  //Stops elevator if there is no joystick input
     	}
     	
-//    	if(lowSensor.get()) {
+//    	if(lowSensor.get()) { //Some limit switch testing code
 //    		testLED.set(true);
 //    	}  else {
 //    		testLED.set(false);
