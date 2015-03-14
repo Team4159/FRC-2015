@@ -49,8 +49,12 @@ public class AutoMethods {
 		double offset = 0.0;
 		IO.imageValues.retrieveValue("XOffset", offset);
 		
-		while (offset >= 0 && offset <=10) {
-			IO.mainDrive.manualDrive(-0.5, 0.0, 0.0, 0.0);
+		while (offset >= -10 && offset <=10) {
+			if (offset <= -10) {
+				IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+			} else if (offset >=10) {
+				IO.mainDrive.manualDrive(-0.5, 0.0, 0.0, 0.0);
+			}
 			IO.imageValues.retrieveValue("XOffset", offset);
 		}
 		
