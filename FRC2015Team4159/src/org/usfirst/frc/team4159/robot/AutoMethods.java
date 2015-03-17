@@ -24,7 +24,7 @@ public class AutoMethods {
 	private static double exitTime = 3.0;
 	private static double toteDropTime = 1.0;
 	
-	private static double Kp = 0.3;				//tune for gyro
+	private static double Kp = 0.0028;				//tune for gyro
 	
 	SendableChooser autoChooser;
 	
