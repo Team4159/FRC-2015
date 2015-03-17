@@ -64,7 +64,7 @@ public class AutoMethods {
 	public void autoStraightDrive(double speed, double durationInSeconds) {
 		autoTime.start();
 		while (!autoTime.hasPeriodPassed(durationInSeconds)){
-			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getAngle());
+			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getPidAngle());
 		}
 		autoTime.stop();
 		autoTime.reset();
@@ -73,7 +73,7 @@ public class AutoMethods {
 	
 	public void toteGet() {
 		while (IO.toteSensor.get()){
-			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getAngle());
+			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getPidAngle());
 		}
 		
 		OctoDrive.autoDrive.drive(0.0, 0.0);
