@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4159.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class gyroSampler implements Runnable {
@@ -118,5 +119,8 @@ public class gyroSampler implements Runnable {
 		//reset_angle_b = true;
 		gyro_angle = 0;
 		tmp_angle = 0;
+		mainGyro.reset();
+		Timer.delay(0.005);
+		mainGyro.initialize();
 	}
 }
