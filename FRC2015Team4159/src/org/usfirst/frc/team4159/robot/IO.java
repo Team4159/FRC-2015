@@ -26,7 +26,7 @@ public class IO {
 	}
 	
 	public static GyroManager mainGyro = new GyroManager(new gyroSampler          //Gyro Declaration
-				(new GyroITG3200(I2C.Port.kOnboard)));
+				(new GyroITG3200(I2C.Port.kOnboard), 50, 5));
 	
 	
 	public static NetworkTable imageValues;										  //RoboRealm NetworkTable Declaration

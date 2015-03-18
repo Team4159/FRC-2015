@@ -35,24 +35,22 @@ public class Robot extends IterativeRobot {
 //    DigitalInput lowSensor = new DigitalInput(8);
 //    DigitalInput topSensor = new DigitalInput(9);
 //    
-    
-	boolean isFirstAutoLoop;
+ 
 	
     public void robotInit() {
     	
     }
     
     public void autonomousInit() {
-    	isFirstAutoLoop = true;													//Starts gyro and sets prepares autonomous modes
+    												//Starts gyro and sets prepares autonomous modes
     	IO.mainGyro.startGyro();
     }
     
+    //PROVISIONAL
+    Timer testTime;
+    
     public void autonomousPeriodic() {
-    	if (isFirstAutoLoop) {
- //   		AutoMethods.instance.autoStraightDrive(0.5, 3);
-    		
-    		isFirstAutoLoop = false;
-    	}
+    	
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
@@ -70,7 +68,7 @@ public class Robot extends IterativeRobot {
     		IO.mainDrive.octoShift(true);
     	}
     	
-    	IO.mainDrive.manualDrive(IO.leftStick.getX(), IO.leftStick.getY(), 
+    	IO.mainDrive.manualDrive(-IO.leftStick.getX(), -IO.leftStick.getY(), 
     			IO.rightStick.getX(), IO.rightStick.getY()); 				  //Drives according to tank/mecanum boolean in OctoDrive
         
     	if (IO.secondaryStick.getRawButton(3)){								  //Moves elevator up
@@ -103,4 +101,87 @@ public class Robot extends IterativeRobot {
     	
     	
     }
+}
+
+//=============================================================================================================================//
+//AUTONOMOUS//
+class autoMethods {
+	
+	private Timer autoTime;
+	
+	
+	private static double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
+	private static double rejoinRouteTime = 3.0; 
+	private static double liftTime = 1.0;
+	private static double exitTime = 3.0;
+	private static double toteDropTime = 1.0;
+	
+	private static double Kp = 0.0028;				//tune for gyro
+	
+	public void toteAim() {
+		double offset = 0.0;
+		IO.imageValues.retrieveValue("XOffset", offset);
+		
+		while (offset >= -10 && offset <=10) {
+			if (offset <= -10) {
+				IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+			} else if (offset >=10) {
+				IO.mainDrive.manualDrive(-0.5, 0.0, 0.0, 0.0);
+			}
+			IO.imageValues.retrieveValue("XOffset", offset);
+		}
+		
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+	}
+	
+	public void autoStraightDrive(double speed, double durationInSeconds) {
+		autoTime.start();
+		while (!autoTime.hasPeriodPassed(durationInSeconds)){
+			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getPidAngle());
+		}
+		autoTime.stop();
+		autoTime.reset();
+		OctoDrive.autoDrive.drive(0.0, 0.0);
+	}
+	
+	public void toteGet() {
+		while (IO.toteSensor.get()){
+			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getPidAngle());
+		}
+		
+		OctoDrive.autoDrive.drive(0.0, 0.0);
+	}
+	
+ 	public void toteTimedLift(double liftTime) {
+ 		IO.elevator.moveLow();
+ 		autoTime.start();
+ 		while (!autoTime.hasPeriodPassed(liftTime)) {
+ 			IO.elevator.autoLift(1.0);
+ 		}
+ 		autoTime.stop();
+ 		autoTime.reset();
+ 		IO.elevator.autoLift(0.0);
+ 		
+ 	}
+	 
+	public void continuedRoutine() {
+		toteAim();
+		toteGet();
+		toteTimedLift(liftTime);
+		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+		Timer.delay(rejoinRouteTime);
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+		autoStraightDrive(0.5, travelTime);
+	}
+	
+	public void endRouteine() {
+		toteAim();
+		toteGet();
+		toteTimedLift(liftTime);
+		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
+		Timer.delay(exitTime);
+		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+		IO.elevator.moveLow();
+		autoStraightDrive(-0.5, toteDropTime);
+	}
 }

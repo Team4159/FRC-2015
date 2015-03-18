@@ -93,17 +93,21 @@ public class gyroSampler implements Runnable {
 	
 	public int pidAngle() {
 		//Converts angle from 0-360 to the range of -179 - 180 where 0 is the center
-		int pidAngle;
-		if (gyro_angle > 0 && gyro_angle < 180) {
-			pidAngle = gyro_angle;
-		} else if (gyro_angle < 360 && gyro_angle > 180) {
-			pidAngle = gyro_angle - 360;
-		} else if (gyro_angle == 0){
+		int pidAngle = 0;
+		if (gyro_angle == 0){
 			pidAngle = 0;
+		} else if (gyro_angle >180) {
+			pidAngle = gyro_angle - 360;
+		} else if (gyro_angle < 180) {
+			pidAngle = gyro_angle;
+		} else if (gyro_angle == 180) {
+			gyro_angle = 180;
 		} else {
-			pidAngle = 180;
+			gyro_angle = 0;
 		}
+		
 		return pidAngle;
+		
 	}
 	
 	private int raw_angle_convert(int raw_angle){
@@ -119,8 +123,8 @@ public class gyroSampler implements Runnable {
 		//reset_angle_b = true;
 		gyro_angle = 0;
 		tmp_angle = 0;
-		mainGyro.reset();
-		Timer.delay(0.005);
-		mainGyro.initialize();
+//		mainGyro.reset();
+//		Timer.delay(0.005);
+//		mainGyro.initialize();
 	}
 }
