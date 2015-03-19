@@ -36,14 +36,16 @@ public class Robot extends IterativeRobot {
 //    DigitalInput topSensor = new DigitalInput(9);
 //    
  
-	
+	AutoChooser autoChoice;
+	int autoMode;
     public void robotInit() {
-    	
+    	autoChoice = new AutoChooser();
     }
     
     public void autonomousInit() {
-    												//Starts gyro and sets prepares autonomous modes
+    											//Starts gyro and sets prepares autonomous modes
     	IO.mainGyro.startGyro();
+    	autoMode = autoChoice.getChoice();
     }
     
     //PROVISIONAL
@@ -117,6 +119,8 @@ class autoMethods {
 	private static double toteDropTime = 1.0;
 	
 	private static double Kp = 0.0028;				//tune for gyro
+	private static double drivetrainOffset = 0.1;
+	private static double toteAimTime = 1;
 	
 	public void toteAim() {
 		double offset = 0.0;
@@ -134,7 +138,7 @@ class autoMethods {
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
 	}
 	
-	public void autoStraightDrive(double speed, double durationInSeconds) {
+	public void gyroStraightDrive(double speed, double durationInSeconds) {
 		autoTime.start();
 		while (!autoTime.hasPeriodPassed(durationInSeconds)){
 			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getPidAngle());
@@ -144,7 +148,7 @@ class autoMethods {
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
-	public void toteGet() {
+	public void toteGetGyro() {
 		while (IO.toteSensor.get()){
 			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getPidAngle());
 		}
@@ -164,24 +168,50 @@ class autoMethods {
  		
  	}
 	 
-	public void continuedRoutine() {
+	public void continuedGyroRoutine() {
 		toteAim();
-		toteGet();
+		toteGetGyro();
 		toteTimedLift(liftTime);
 		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
 		Timer.delay(rejoinRouteTime);
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
-		autoStraightDrive(0.5, travelTime);
+		gyroStraightDrive(0.5, travelTime);
 	}
 	
-	public void endRouteine() {
+	public void endGyroRouteine() {
 		toteAim();
-		toteGet();
+		toteGetGyro();
 		toteTimedLift(liftTime);
 		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
 		Timer.delay(exitTime);
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
 		IO.elevator.moveLow();
-		autoStraightDrive(-0.5, toteDropTime);
+		gyroStraightDrive(-0.5, toteDropTime);
+	}
+	
+	public void straightDrive(double speed, double duration, double offset) {
+		autoTime.reset();
+		autoTime.start();
+		while (!autoTime.hasPeriodPassed(duration)) {
+			OctoDrive.autoDrive.drive(speed, offset);
+		}
+		OctoDrive.autoDrive.drive(0.0, 0.0);
+		autoTime.stop();
+		autoTime.reset();
+	}
+	
+	public void toteGet(double offset) {
+		while(IO.toteSensor.get()) {
+			OctoDrive.autoDrive.drive(0.5, offset);
+		}
+		OctoDrive.autoDrive.drive(0.0, 0.0);
+	}
+	
+	public void continuedRoutine() {
+		
+	}
+	
+	public void endRoutine() {
+
 	}
 }
