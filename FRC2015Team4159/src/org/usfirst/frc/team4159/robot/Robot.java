@@ -37,6 +37,8 @@ public class Robot extends IterativeRobot {
 //    
  
 	AutoChooser autoChoice;
+	AutoMethods autoRunner;
+	
 	int autoMode;
     public void robotInit() {
     	autoChoice = new AutoChooser();
@@ -52,7 +54,7 @@ public class Robot extends IterativeRobot {
     Timer testTime;
     
     public void autonomousPeriodic() {
-    	
+    	autoRunner.runRoutine(autoMode);
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
@@ -107,13 +109,13 @@ public class Robot extends IterativeRobot {
 
 //=============================================================================================================================//
 //AUTONOMOUS//
-class autoMethods {
+class AutoMethods {
 	
 	private Timer autoTime;
 	
 	
-	private static double travelTime = 5.0;        //Change based on how the mecanum wheels perform on carpet
-	private static double rejoinRouteTime = 3.0; 
+	private static double travelTime = 3.0;        //Change based on how the mecanum wheels perform on carpet
+	private static double rejoinRouteTime = 1.0; 
 	private static double liftTime = 1.0;
 	private static double exitTime = 3.0;
 	private static double toteDropTime = 1.0;
@@ -189,6 +191,9 @@ class autoMethods {
 		gyroStraightDrive(-0.5, toteDropTime);
 	}
 	
+	//================================//
+	//METHODS THAT DO NOT REQUIRE GYRO//
+	//================================//
 	public void straightDrive(double speed, double duration, double offset) {
 		autoTime.reset();
 		autoTime.start();
@@ -200,18 +205,52 @@ class autoMethods {
 		autoTime.reset();
 	}
 	
-	public void toteGet(double offset) {
+	public void toteGet(double speed, double offset) {
 		while(IO.toteSensor.get()) {
-			OctoDrive.autoDrive.drive(0.5, offset);
+			OctoDrive.autoDrive.drive(speed, offset);
 		}
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
+	public void autoStrafe(double speed, double duration) {
+		autoTime.reset();
+		autoTime.start();
+		while (!autoTime.hasPeriodPassed(duration)) {
+			OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
+		}
+		autoTime.stop();
+		autoTime.reset();
+		OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
+	}
+	
 	public void continuedRoutine() {
-		
+		toteGet(0.5, drivetrainOffset);
+		IO.elevator.moveLow();
+		toteTimedLift(liftTime);
+		autoStrafe(0.5, rejoinRouteTime);
+		straightDrive(0.5, travelTime, drivetrainOffset);
+		autoStrafe(-0.5, rejoinRouteTime);
 	}
 	
 	public void endRoutine() {
-
+		toteGet(0.5, drivetrainOffset);
+		IO.elevator.moveLow();
+		toteTimedLift(liftTime);
+		autoStrafe(0.5, exitTime);
+		IO.elevator.moveLow();
+		straightDrive(0.5, toteDropTime, drivetrainOffset);
+	}
+	
+	public void runRoutine(int autoChoice) {
+		switch (autoChoice) {
+			case 5:
+				continuedRoutine();
+				continuedRoutine();
+				endRoutine();
+				break;
+			default:
+				straightDrive(0.5, 5, drivetrainOffset);
+				break;
+		}
 	}
 }
