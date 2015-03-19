@@ -12,49 +12,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Robot extends IterativeRobot {
-//	
-//    DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);
-//    DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);
-//    OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet);
-//
-//    Joystick leftStick = new Joystick(1);
-//    Joystick rightStick = new Joystick(2);
-//    Joystick secondaryStick = new Joystick(3);
-//    
-//    Victor leftLifter = new Victor(4);
-//    Victor rightLifter = new Victor(5);
-//    ToteLifter elevator = new ToteLifter(leftLifter, rightLifter);
-//    
-//    GyroITG3200 mainGyro = new GyroITG3200(I2C.Port.kOnboard);
-//    gyroSampler averageGyro = new gyroSampler(mainGyro, 25, 10);
-//    GyroManager gyroInterfacer = new GyroManager(averageGyro);
-//    boolean ifFirstLoop;
-//    
-////    DigitalOutput testLED =  new DigitalOutput(0);
-//    
-//    DigitalInput lowSensor = new DigitalInput(8);
-//    DigitalInput topSensor = new DigitalInput(9);
-//    
- 
+
 	AutoChooser autoChoice;
 	AutoMethods autoRunner;
 	
 	int autoMode;
     public void robotInit() {
     	autoChoice = new AutoChooser();
+    	IO.mainDrive.octoShift(false);
     }
     
-    public void autonomousInit() {
-    											//Starts gyro and sets prepares autonomous modes
-    	IO.mainGyro.startGyro();
+    public void autonomousInit() {										
+    	IO.mainGyro.startGyro();                 //Starts gyro thread
     	autoMode = autoChoice.getChoice();
+    	IO.mainDrive.octoShift(true);            //Shifts to mecanum
     }
     
     //PROVISIONAL
     Timer testTime;
     
     public void autonomousPeriodic() {
-    	autoRunner.runRoutine(autoMode);
+    	autoRunner.runRoutine(autoMode);         //Should last the duration of autonomous. If not, add some "loop once" code
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
