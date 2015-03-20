@@ -167,9 +167,7 @@ class AutoMethods {
 		toteAim();
 		toteGetGyro();
 		toteTimedLift(liftTime);
-		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
-		Timer.delay(rejoinRouteTime);
-		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
+		autoStrafe(0.5, rejoinRouteTime);
 		gyroStraightDrive(0.5, travelTime);
 	}
 	
@@ -177,8 +175,7 @@ class AutoMethods {
 		toteAim();
 		toteGetGyro();
 		toteTimedLift(liftTime);
-		IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
-		Timer.delay(exitTime);
+		autoStrafe(0.5, exitTime);
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
 		IO.elevator.moveLow();
 		gyroStraightDrive(-0.5, toteDropTime);
