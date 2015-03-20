@@ -18,7 +18,7 @@ public class Robot extends IterativeRobot {
 	boolean isToteIn;
 	boolean isFirstLoop;
 	
-	int autoMode;
+	int autoMode = 0;
     public void robotInit() {
     }
     
@@ -34,7 +34,8 @@ public class Robot extends IterativeRobot {
     
     public void autonomousPeriodic() {
     	if (isFirstLoop) {
-    	autoRunner.straightDrive(0.5, 3, 10);        //Should last the duration of autonomous. If not, add some "loop once" code
+    		autoRunner.runRoutine(autoMode);
+    	//autoRunner.straightDrive(0.5, 3, 10);        //Should last the duration of autonomous. If not, add some "loop once" code
     	isFirstLoop = false;
     }
     }
