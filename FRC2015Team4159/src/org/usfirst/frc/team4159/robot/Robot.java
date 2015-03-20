@@ -13,26 +13,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-	AutoChooser autoChoice;
-	AutoMethods autoRunner;
+	AutoChooser autoChoice = new AutoChooser();
+	AutoMethods autoRunner = new AutoMethods();
+	boolean isToteIn;
+	boolean isFirstLoop;
 	
 	int autoMode;
     public void robotInit() {
-    	autoChoice = new AutoChooser();
-    	IO.mainDrive.octoShift(false);
     }
     
     public void autonomousInit() {										
     	IO.mainGyro.startGyro();                 //Starts gyro thread
     	autoMode = autoChoice.getChoice();
     	IO.mainDrive.octoShift(true);            //Shifts to mecanum
+    	isFirstLoop = true;
     }
     
     //PROVISIONAL
     Timer testTime;
     
     public void autonomousPeriodic() {
-    	autoRunner.runRoutine(autoMode);         //Should last the duration of autonomous. If not, add some "loop once" code
+    	if (isFirstLoop) {
+    	autoRunner.straightDrive(0.5, 3, 10);        //Should last the duration of autonomous. If not, add some "loop once" code
+    	isFirstLoop = false;
+    }
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
@@ -43,14 +47,20 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putNumber("Gyro Z Value", IO.mainGyro.getAngle());
     	SmartDashboard.putNumber("Gyro Pid Value", IO.mainGyro.getPidAngle());
     	//TEST GYRO CODE//
+    	
+    	isToteIn = (IO.toteSensor.get()? false : true);
+    	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
+    	
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
     		IO.mainDrive.octoShift(false);
+    		SmartDashboard.putString("Drive State:", "Traction/Tank");
     	}
     	else if (IO.leftStick.getRawButton(2)) { //Changes to mecanum
     		IO.mainDrive.octoShift(true);
+    		SmartDashboard.putString("Drive State:", "Mecanum");
     	}
     	
-    	IO.mainDrive.manualDrive(-IO.leftStick.getX(), -IO.leftStick.getY(), 
+    	IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(), 
     			IO.rightStick.getX(), IO.rightStick.getY()); 				  //Drives according to tank/mecanum boolean in OctoDrive
         
     	if (IO.secondaryStick.getRawButton(3)){								  //Moves elevator up
@@ -101,6 +111,10 @@ class AutoMethods {
 	private static double Kp = 0.0028;				//tune for gyro
 	private static double drivetrainOffset = 0.1;
 	private static double toteAimTime = 1;
+	
+	public AutoMethods() {
+		System.out.println("Auto Ready");
+	}
 	
 	public void toteAim() {
 		double offset = 0.0;

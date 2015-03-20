@@ -33,6 +33,6 @@ public class IO {
 	static {
 		imageValues = NetworkTable.getTable("");
 	}
-	public static DigitalInput toteSensor = new DigitalInput(10);
+	public static DigitalInput toteSensor = new DigitalInput(7);
 	
 }

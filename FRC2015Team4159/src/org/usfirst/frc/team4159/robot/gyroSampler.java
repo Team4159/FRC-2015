@@ -112,6 +112,7 @@ public class gyroSampler implements Runnable {
 	
 	private int raw_angle_convert(int raw_angle){
 		//convert from a raw int angle to a simple angle between 0-360
+		raw_angle = raw_angle;
 		int out_angle=0;
 		int abs_raw_angle = (raw_angle>=0)?raw_angle:(0-raw_angle);
 		abs_raw_angle %= 360;
