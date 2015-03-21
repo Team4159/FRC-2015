@@ -59,8 +59,8 @@ public class OctoDrive {
 	
 	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2){ //Drives the robot in a mecanum/tank mode
 		if (isMecanum == 1) { //Mecanum driving code															 //according to the boolean value isMecanum
-			double right = xVal1;
-			double forward = yVal1;
+			double right = xVal1 * xVal1;
+			double forward = yVal1 * yVal1;
 			double clockwise = -1 * (xVal2 * 0.75);
 		
 			double front_left = forward + clockwise + right;
@@ -108,8 +108,8 @@ public class OctoDrive {
 
 			
 		} else { //Tank driving code
-			double leftVelocity = yVal1;
-			double rightVelocity = yVal2;
+			double leftVelocity = yVal1 * yVal1;
+			double rightVelocity = yVal2 * yVal2;
 			
 			if(leftSideInverted) {
 				leftVelocity = -leftVelocity;
