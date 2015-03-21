@@ -16,7 +16,7 @@ public class OctoDrive {
 		
 	private DrivePistons octoShift;
 	
-	private boolean isMecanum;
+	private int isMecanum;
 	private boolean frontLeftInverted;
 	private boolean rearLeftInverted;
 	private boolean frontRightInverted;
@@ -43,12 +43,14 @@ public class OctoDrive {
 	}
 	
 	
-	public OctoDrive octoShift(boolean state) { //Changes boolean value for mecanum/tank state. The code will react accordingly
+	public OctoDrive octoShift(int state) { //Changes boolean value for mecanum/tank state. The code will react accordingly
 		isMecanum = state;
-		if (isMecanum) {
-			octoShift.linearActuate(false);
+		if (isMecanum == 1) {
+			octoShift.linearActuate(false); //Changes to mecanum
+		} else if (isMecanum == 2) {
+			octoShift.linearActuate(true); //Changes to tank (full)
 		} else {
-			octoShift.linearActuate(true);
+			octoShift.backActuate(true);  //Extends back pistons
 		}
 		
 		return this; //For method chaining
@@ -56,10 +58,10 @@ public class OctoDrive {
 	
 	
 	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2){ //Drives the robot in a mecanum/tank mode
-		if (isMecanum) { //Mecanum driving code															 //according to the boolean value isMecanum
+		if (isMecanum == 1) { //Mecanum driving code															 //according to the boolean value isMecanum
 			double right = xVal1;
 			double forward = yVal1;
-			double clockwise = xVal2;
+			double clockwise = -1 * (xVal2 * 0.75);
 		
 			double front_left = forward + clockwise + right;
 			double front_right = forward - clockwise - right;
@@ -122,6 +124,7 @@ public class OctoDrive {
 			frontRight.set(rightVelocity);
 			rearRight.set(rightVelocity);
 			
+			
 		}
 	}
 	
@@ -130,7 +133,7 @@ public class OctoDrive {
 			case "frontLeft":											 //Will react accordingly
 				frontLeftInverted = isInverted;
 				break;													 //Note: the frontLeft, rearLeft... etc methods are for
-			case "rearleft":											 //Mecanum inversion, leftSide and rightSide for tank		
+			case "rearLeft":											 //Mecanum inversion, leftSide and rightSide for tank		
 				rearLeftInverted = isInverted;							 //Motor inversion
 				break;
 			case "frontRight":

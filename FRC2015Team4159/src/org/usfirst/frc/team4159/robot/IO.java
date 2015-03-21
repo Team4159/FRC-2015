@@ -13,18 +13,21 @@ public class IO {
 	private static DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);			  //Drivetrain Declarations
 	private static DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);		  
 	public static OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet)
-	.octoShift(true)
-	.invertMotor("rearRight", true) //YES THAT'S RIGHT							  //Some method chaining to load class early on 
-    .invertMotor("frontRight", true) 
+	.octoShift(1)
+	.invertMotor("rearRight", false) //YES THAT'S RIGHT							  //Some method chaining to load class early on 
+    .invertMotor("frontRight", false)
+    .invertMotor("frontLeft", true)
+	.invertMotor("rearLeft", true)
     .invertMotor("leftSide", true);  
 
+	public static ToteGrabber intake = new ToteGrabber(6, 7);
 	public static ToteLifter elevator = new ToteLifter(4, 5);					  //ToteLifter Declarations
 	public static DigitalInput lowLimit = new DigitalInput(8);
 	public static DigitalInput highLimit = new DigitalInput(9);
 	static {
 		elevator.setHighLow(lowLimit, highLimit);
 	}
-	
+
 	public static GyroManager mainGyro = new GyroManager(new gyroSampler          //Gyro Declaration
 				(new GyroITG3200(I2C.Port.kOnboard), 50, 5));
 	

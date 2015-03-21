@@ -1,43 +1,46 @@
 package org.usfirst.frc.team4159.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.I2C;
+//import edu.wpi.first.wpilibj.DigitalInput;
+//import edu.wpi.first.wpilibj.DigitalOutput;
+//import edu.wpi.first.wpilibj.Gyro;
+//import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
+//import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Robot extends IterativeRobot {
 
-	AutoChooser autoChoice = new AutoChooser();
-	AutoMethods autoRunner = new AutoMethods();
+//	AutoChooser autoChoice = new AutoChooser();
+//	AutoMethods autoRunner = new AutoMethods();
 	boolean isToteIn;
-	boolean isFirstLoop;
-	
-	int autoMode = 0;
+
+//	int autoMode = 0;
+	Timer testTime = new Timer();
     public void robotInit() {
     }
     
     public void autonomousInit() {										
-    	IO.mainGyro.startGyro();                 //Starts gyro thread
-    	autoMode = autoChoice.getChoice();
-    	IO.mainDrive.octoShift(true);            //Shifts to mecanum
-    	isFirstLoop = true;
+//    	IO.mainGyro.startGyro();                 //Starts gyro thread
+//    	autoMode = autoChoice.getChoice();
+    	IO.mainDrive.octoShift(1);            //Shifts traction
+    	testTime.reset();
+    	testTime.start();
+    	
     }
     
-    //PROVISIONAL
-    Timer testTime;
+    
     
     public void autonomousPeriodic() {
-    	if (isFirstLoop) {
-    		autoRunner.runRoutine(autoMode);
-    	//autoRunner.straightDrive(0.5, 3, 10);        //Should last the duration of autonomous. If not, add some "loop once" code
-    	isFirstLoop = false;
-    }
+   	if(testTime.get() > 3.5) {
+    		OctoDrive.autoDrive.drive(0.0, 0.0);
+    		testTime.stop();
+    	} else {
+    		OctoDrive.autoDrive.drive(0.5, 0.0);
+    	}
+    	SmartDashboard.putNumber("Auto Time", testTime.get());
     }
     public void teleopInit() {
     	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
@@ -45,20 +48,23 @@ public class Robot extends IterativeRobot {
     
     public void teleopPeriodic() {
     	//TEST GYRO CODE//
-    	SmartDashboard.putNumber("Gyro Z Value", IO.mainGyro.getAngle());
-    	SmartDashboard.putNumber("Gyro Pid Value", IO.mainGyro.getPidAngle());
+//    	SmartDashboard.putNumber("Gyro Z Value", IO.mainGyro.getAngle());
+//    	SmartDashboard.putNumber("Gyro Pid Value", IO.mainGyro.getPidAngle());
     	//TEST GYRO CODE//
     	
     	isToteIn = (IO.toteSensor.get()? false : true);
     	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
     	
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
-    		IO.mainDrive.octoShift(false);
+    		IO.mainDrive.octoShift(2);
     		SmartDashboard.putString("Drive State:", "Traction/Tank");
     	}
     	else if (IO.leftStick.getRawButton(2)) { //Changes to mecanum
-    		IO.mainDrive.octoShift(true);
+    		IO.mainDrive.octoShift(1);
     		SmartDashboard.putString("Drive State:", "Mecanum");
+    	} else if(IO.leftStick.getRawButton(5)) { //Raises back set piston set and changes control to tank
+    		IO.mainDrive.octoShift(3);
+    		SmartDashboard.putString("Drive State:", "Back Traction, Front Mecanum/Tank");
     	}
     	
     	IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(), 
@@ -73,6 +79,17 @@ public class Robot extends IterativeRobot {
     		IO.elevator.autoLift(0.0);										  //Stops elevator if there is no joystick input
     	}
     	
+    	
+    	if (IO.secondaryStick.getRawButton(4)) {
+    		IO.intake.toteGrab(1.0);
+    		SmartDashboard.putString("Intake State", "Grabbing");
+    	} else if(IO.secondaryStick.getRawButton(5)){
+    		IO.intake.toteGrab(-1.0);
+    		SmartDashboard.putString("Intake State", "Spitting");
+    	} else {
+    		IO.intake.toteGrab(0.0);
+    		SmartDashboard.putString("Intake State", "No Activity");
+    	}
 //    	if(lowSensor.get()) { //Some limit switch testing code
 //    		testLED.set(true);
 //    	}  else {

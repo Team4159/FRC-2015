@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class AutoChooser {
 	private static final int MOVE_ONLY = 1;                                                   //Values used to tell which auto mode is chosen
-	private static final int PICK_ONE_TOTE = 2;
-	private static final int PICK_TWO_TOTE_SKIP = 3;
-	private static final int PICK_TWO_TOTE_NOSKIP = 4;
+//	private static final int PICK_ONE_TOTE = 2;
+//	private static final int PICK_TWO_TOTE_SKIP = 3;
+//	private static final int PICK_TWO_TOTE_NOSKIP = 4;
 	private static final int PICK_THREE_TOTE = 5;
-	private static final int NOCONTAINER_TOTE = 6;
+//	private static final int NOCONTAINER_TOTE = 6;
 	
 	SendableChooser autoChooser;
 

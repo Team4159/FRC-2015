@@ -32,5 +32,14 @@ public class DrivePistons{
 		
 	}
 	
+	public void backActuate(boolean isExtended) {					//Actuates BACK pistons (for step scoring)
+		if (isExtended) {
+			piston1.set(DoubleSolenoid.Value.kForward);
+			piston2.set(DoubleSolenoid.Value.kReverse);
+		} else {
+			piston1.set(DoubleSolenoid.Value.kReverse);
+			piston2.set(DoubleSolenoid.Value.kReverse);
+		}
+	}
 	
 }
