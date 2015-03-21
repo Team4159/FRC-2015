@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
     
     
     public void autonomousPeriodic() {
-   	if(testTime.get() > 3.5) {
+   	if(testTime.get() > 3.0)= {
     		OctoDrive.autoDrive.drive(0.0, 0.0);
     		testTime.stop();
     	} else {
