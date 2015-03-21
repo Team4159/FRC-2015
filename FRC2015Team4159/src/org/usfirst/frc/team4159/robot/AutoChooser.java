@@ -10,9 +10,13 @@ public class AutoChooser {
 	private static final int PICK_THREE_TOTE = 5;
 //	private static final int NOCONTAINER_TOTE = 6;
 	
-	SendableChooser autoChooser;
+	static SendableChooser autoChooser;
 
-	public AutoChooser() {
+	private AutoChooser() {
+		
+	}
+	
+	public static void setUpAuto() {
 		autoChooser = new SendableChooser();                            					//Initializes the autonomous chooser
 		autoChooser.addDefault("Move Only", new Integer(MOVE_ONLY));                        //Adds the options
 //		autoChooser.addObject("1 Tote Pickup", new Integer(PICK_ONE_TOTE));                 //You have to BOX the integers as the parameter for addDefault and addObject
@@ -20,11 +24,11 @@ public class AutoChooser {
 //		autoChooser.addObject("2 Tote Pickup(No skip)", new Integer(PICK_TWO_TOTE_NOSKIP));
 		autoChooser.addObject("3 Tote Pickup", new Integer(PICK_THREE_TOTE));
 //		autoChooser.addObject("Straight Shot 3 Tote Pickup", new Integer(NOCONTAINER_TOTE));
+	
 	}
 
 
-
-	public int getChoice() {
-		return (((Integer) autoChooser.getSelected()).intValue());       //Returns integer value of the chosen autonomus mode UNBOXED
+	public static int getChoice() {
+		return ((Integer) autoChooser.getSelected()).intValue();       //Returns integer value of the chosen autonomus mode UNBOXED
 	}
 }

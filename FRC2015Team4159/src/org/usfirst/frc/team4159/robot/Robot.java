@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
     
     
     public void autonomousPeriodic() {
-   	if(testTime.get() > 3.0)= {
+   	if(testTime.get() > 3.0) {
     		OctoDrive.autoDrive.drive(0.0, 0.0);
     		testTime.stop();
     	} else {
@@ -117,7 +117,7 @@ public class Robot extends IterativeRobot {
 //AUTONOMOUS//
 class AutoMethods {
 	
-	private Timer autoTime;
+	private static Timer autoTime;
 	
 	
 	private static double travelTime = 3.0;        //Change based on how the mecanum wheels perform on carpet
@@ -130,11 +130,11 @@ class AutoMethods {
 	private static double drivetrainOffset = 0.1;
 	private static double toteAimTime = 1;
 	
-	public AutoMethods() {
-		System.out.println("Auto Ready");
+	private AutoMethods() {
+		
 	}
 	
-	public void toteAim() {
+	public static void toteAim() {
 		double offset = 0.0;
 		IO.imageValues.retrieveValue("XOffset", offset);
 		
@@ -150,7 +150,7 @@ class AutoMethods {
 		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
 	}
 	
-	public void gyroStraightDrive(double speed, double durationInSeconds) {
+	public static void gyroStraightDrive(double speed, double durationInSeconds) {
 		autoTime.start();
 		while (!autoTime.hasPeriodPassed(durationInSeconds)){
 			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getPidAngle());
@@ -160,7 +160,7 @@ class AutoMethods {
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
-	public void toteGetGyro() {
+	public static void toteGetGyro() {
 		while (IO.toteSensor.get()){
 			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getPidAngle());
 		}
@@ -168,7 +168,7 @@ class AutoMethods {
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
- 	public void toteTimedLift(double liftTime) {
+ 	public static void toteTimedLift(double liftTime) {
  		IO.elevator.moveLow();
  		autoTime.start();
  		while (!autoTime.hasPeriodPassed(liftTime)) {
@@ -180,7 +180,7 @@ class AutoMethods {
  		
  	}
 	 
-	public void continuedGyroRoutine() {
+	public static void continuedGyroRoutine() {
 		toteAim();
 		toteGetGyro();
 		toteTimedLift(liftTime);
@@ -188,7 +188,7 @@ class AutoMethods {
 		gyroStraightDrive(0.5, travelTime);
 	}
 	
-	public void endGyroRouteine() {
+	public static void endGyroRouteine() {
 		toteAim();
 		toteGetGyro();
 		toteTimedLift(liftTime);
@@ -201,7 +201,7 @@ class AutoMethods {
 	//================================//
 	//METHODS THAT DO NOT REQUIRE GYRO//
 	//================================//
-	public void straightDrive(double speed, double duration, double offset) {
+	public static void straightDrive(double speed, double duration, double offset) {
 		autoTime.reset();
 		autoTime.start();
 		while (!autoTime.hasPeriodPassed(duration)) {
@@ -212,14 +212,14 @@ class AutoMethods {
 		autoTime.reset();
 	}
 	
-	public void toteGet(double speed, double offset) {
+	public static void toteGet(double speed, double offset) {
 		while(IO.toteSensor.get()) {
 			OctoDrive.autoDrive.drive(speed, offset);
 		}
 		OctoDrive.autoDrive.drive(0.0, 0.0);
 	}
 	
-	public void autoStrafe(double speed, double duration) {
+	public static void autoStrafe(double speed, double duration) {
 		autoTime.reset();
 		autoTime.start();
 		while (!autoTime.hasPeriodPassed(duration)) {
@@ -230,7 +230,7 @@ class AutoMethods {
 		OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
 	}
 	
-	public void continuedRoutine() {
+	public static void continuedRoutine() {
 		toteGet(0.5, drivetrainOffset);
 		IO.elevator.moveLow();
 		toteTimedLift(liftTime);
@@ -239,7 +239,7 @@ class AutoMethods {
 		autoStrafe(-0.5, rejoinRouteTime);
 	}
 	
-	public void endRoutine() {
+	public static void endRoutine() {
 		toteGet(0.5, drivetrainOffset);
 		IO.elevator.moveLow();
 		toteTimedLift(liftTime);
@@ -248,7 +248,7 @@ class AutoMethods {
 		straightDrive(0.5, toteDropTime, drivetrainOffset);
 	}
 	
-	public void runRoutine(int autoChoice) {
+	public static void runRoutine(int autoChoice) {
 		switch (autoChoice) {
 			case 5:
 				continuedRoutine();
