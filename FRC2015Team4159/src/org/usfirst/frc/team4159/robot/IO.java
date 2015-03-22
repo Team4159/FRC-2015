@@ -20,7 +20,7 @@ public class IO {
 	.invertMotor("rearLeft", true)
     .invertMotor("leftSide", true);  
 
-	public static ToteGrabber intake = new ToteGrabber(6, 7);
+	//public static ToteGrabber intake = new ToteGrabber(6, 7);
 	public static ToteLifter elevator = new ToteLifter(4, 5);					  //ToteLifter Declarations
 	public static DigitalInput lowLimit = new DigitalInput(8);
 	public static DigitalInput highLimit = new DigitalInput(9);
@@ -32,10 +32,10 @@ public class IO {
 				(new GyroITG3200(I2C.Port.kOnboard), 50, 5));
 	
 	
-	public static NetworkTable imageValues;										  //RoboRealm NetworkTable Declaration
-	static {
-		imageValues = NetworkTable.getTable("");
-	}
+//	public static NetworkTable imageValues;										  //RoboRealm NetworkTable Declaration
+//	static {
+//		imageValues = NetworkTable.getTable("");
+//	}
 	public static DigitalInput toteSensor = new DigitalInput(7);
 	
 }

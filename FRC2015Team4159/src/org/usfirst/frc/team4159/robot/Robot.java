@@ -13,45 +13,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-//	AutoChooser autoChoice = new AutoChooser();
-//	AutoMethods autoRunner = new AutoMethods();
-	boolean isToteIn;
 
-//	int autoMode = 0;
-	Timer testTime = new Timer();
+	boolean isToteIn;
+	int autoChoice;
+
+//	Timer testTime = new Timer();
     public void robotInit() {
+    	AutoChooser.setup();
     }
     
-    public void autonomousInit() {										
-//    	IO.mainGyro.startGyro();                 //Starts gyro thread
-//    	autoMode = autoChoice.getChoice();
-    	IO.mainDrive.octoShift(1);            //Shifts traction
-    	testTime.reset();
-    	testTime.start();
+    public void autonomousInit() {
+    	autoChoice = AutoChooser.getChoice();
+    	IO.mainDrive.octoShift(1);            //Shifts to mecanum
+//    	testTime.reset();
+//    	testTime.start();
     	
     }
     
     
     
     public void autonomousPeriodic() {
-   	if(testTime.get() > 3.0) {
-    		OctoDrive.autoDrive.drive(0.0, 0.0);
-    		testTime.stop();
-    	} else {
-    		OctoDrive.autoDrive.drive(0.5, 0.0);
-    	}
-    	SmartDashboard.putNumber("Auto Time", testTime.get());
+    	AutoMethods.runRoutine(autoChoice);
+//   	if(testTime.get() > 2.0) {
+//    		OctoDrive.autoDrive.drive(0.0, 0.0);
+//    		testTime.stop();
+//    	} else {
+//    		OctoDrive.autoDrive.drive(0.5, 0.0);
+//    	}
+//    	SmartDashboard.putNumber("Auto Time", testTime.get());
     }
     public void teleopInit() {
-    	IO.mainGyro.startGyro();												//Starts gyro, (resets it if it is already on)
+    	
     }
     
     public void teleopPeriodic() {
-    	//TEST GYRO CODE//
-//    	SmartDashboard.putNumber("Gyro Z Value", IO.mainGyro.getAngle());
-//    	SmartDashboard.putNumber("Gyro Pid Value", IO.mainGyro.getPidAngle());
-    	//TEST GYRO CODE//
-    	
     	isToteIn = (IO.toteSensor.get()? false : true);
     	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
     	
@@ -79,23 +74,6 @@ public class Robot extends IterativeRobot {
     		IO.elevator.autoLift(0.0);										  //Stops elevator if there is no joystick input
     	}
     	
-    	
-    	if (IO.secondaryStick.getRawButton(4)) {
-    		IO.intake.toteGrab(1.0);
-    		SmartDashboard.putString("Intake State", "Grabbing");
-    	} else if(IO.secondaryStick.getRawButton(5)){
-    		IO.intake.toteGrab(-1.0);
-    		SmartDashboard.putString("Intake State", "Spitting");
-    	} else {
-    		IO.intake.toteGrab(0.0);
-    		SmartDashboard.putString("Intake State", "No Activity");
-    	}
-//    	if(lowSensor.get()) { //Some limit switch testing code
-//    		testLED.set(true);
-//    	}  else {
-//    		testLED.set(false);
-//    	}
-    	
     }
     
     public void testInit() {
@@ -104,7 +82,11 @@ public class Robot extends IterativeRobot {
     }
     
     public void testPeriodic() {
-    	
+//    	if(lowSensor.get()) { //Some limit switch testing code
+//		testLED.set(true);
+//	}  else {
+//		testLED.set(false);
+//	}
     }	
     
     public void disabledInit() {
@@ -134,40 +116,6 @@ class AutoMethods {
 		
 	}
 	
-	public static void toteAim() {
-		double offset = 0.0;
-		IO.imageValues.retrieveValue("XOffset", offset);
-		
-		while (offset >= -10 && offset <=10) {
-			if (offset <= -10) {
-				IO.mainDrive.manualDrive(0.5, 0.0, 0.0, 0.0);
-			} else if (offset >=10) {
-				IO.mainDrive.manualDrive(-0.5, 0.0, 0.0, 0.0);
-			}
-			IO.imageValues.retrieveValue("XOffset", offset);
-		}
-		
-		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
-	}
-	
-	public static void gyroStraightDrive(double speed, double durationInSeconds) {
-		autoTime.start();
-		while (!autoTime.hasPeriodPassed(durationInSeconds)){
-			OctoDrive.autoDrive.drive(speed, Kp * -IO.mainGyro.getPidAngle());
-		}
-		autoTime.stop();
-		autoTime.reset();
-		OctoDrive.autoDrive.drive(0.0, 0.0);
-	}
-	
-	public static void toteGetGyro() {
-		while (IO.toteSensor.get()){
-			OctoDrive.autoDrive.drive(0.5, Kp * -IO.mainGyro.getPidAngle());
-		}
-		
-		OctoDrive.autoDrive.drive(0.0, 0.0);
-	}
-	
  	public static void toteTimedLift(double liftTime) {
  		IO.elevator.moveLow();
  		autoTime.start();
@@ -179,24 +127,6 @@ class AutoMethods {
  		IO.elevator.autoLift(0.0);
  		
  	}
-	 
-	public static void continuedGyroRoutine() {
-		toteAim();
-		toteGetGyro();
-		toteTimedLift(liftTime);
-		autoStrafe(0.5, rejoinRouteTime);
-		gyroStraightDrive(0.5, travelTime);
-	}
-	
-	public static void endGyroRouteine() {
-		toteAim();
-		toteGetGyro();
-		toteTimedLift(liftTime);
-		autoStrafe(0.5, exitTime);
-		IO.mainDrive.manualDrive(0.0, 0.0, 0.0, 0.0);
-		IO.elevator.moveLow();
-		gyroStraightDrive(-0.5, toteDropTime);
-	}
 	
 	//================================//
 	//METHODS THAT DO NOT REQUIRE GYRO//
@@ -204,7 +134,7 @@ class AutoMethods {
 	public static void straightDrive(double speed, double duration, double offset) {
 		autoTime.reset();
 		autoTime.start();
-		while (!autoTime.hasPeriodPassed(duration)) {
+		while (autoTime.get() < duration) {
 			OctoDrive.autoDrive.drive(speed, offset);
 		}
 		OctoDrive.autoDrive.drive(0.0, 0.0);
@@ -222,7 +152,7 @@ class AutoMethods {
 	public static void autoStrafe(double speed, double duration) {
 		autoTime.reset();
 		autoTime.start();
-		while (!autoTime.hasPeriodPassed(duration)) {
+		while (autoTime.get() < duration) {
 			OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
 		}
 		autoTime.stop();
@@ -250,13 +180,15 @@ class AutoMethods {
 	
 	public static void runRoutine(int autoChoice) {
 		switch (autoChoice) {
-			case 5:
-				continuedRoutine();
-				continuedRoutine();
-				endRoutine();
+			case AutoChooser.MOVE_ONLY:
+				AutoMethods.straightDrive(0.5, 2, -0.05);                           //Fix with gyro method
+				break;
+			case AutoChooser.PICK_THREE_TOTE:
+				AutoMethods.continuedRoutine();
+				AutoMethods.continuedRoutine();
+				AutoMethods.endRoutine();
 				break;
 			default:
-				straightDrive(0.5, 5, drivetrainOffset);
 				break;
 		}
 	}
