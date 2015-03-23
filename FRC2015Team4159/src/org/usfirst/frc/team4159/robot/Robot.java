@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-
+	
 	boolean isToteIn;
 	int autoChoice;
 
