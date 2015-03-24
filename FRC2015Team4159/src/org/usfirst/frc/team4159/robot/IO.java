@@ -1,8 +1,11 @@
 package org.usfirst.frc.team4159.robot;
 
+import com.kauailabs.navx_mxp.AHRS;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class IO {
@@ -38,4 +41,6 @@ public class IO {
 //	}
 	public static DigitalInput toteSensor = new DigitalInput(7);
 	
+	public static AHRS imu;
+	public static SerialPort serial_port;
 }

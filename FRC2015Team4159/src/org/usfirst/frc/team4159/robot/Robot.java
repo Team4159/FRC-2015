@@ -1,25 +1,40 @@
 package org.usfirst.frc.team4159.robot;
 
+
 //import edu.wpi.first.wpilibj.DigitalInput;
 //import edu.wpi.first.wpilibj.DigitalOutput;
 //import edu.wpi.first.wpilibj.Gyro;
 //import edu.wpi.first.wpilibj.I2C;
+import com.kauailabs.navx_mxp.AHRS;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SerialPort;
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class Robot extends IterativeRobot {
 
-	
-	boolean isToteIn;
 	int autoChoice;
+	boolean first_iteration;
 
 //	Timer testTime = new Timer();
     public void robotInit() {
     	AutoChooser.setup();
+    	try {
+    		IO.serial_port = new SerialPort(57600, SerialPort.Port.kUSB);
+    		byte update_rate_hz = 50;
+    		IO.imu = new AHRS(IO.serial_port, update_rate_hz);
+    	} catch(Exception ex){
+    		
+    	}
+    	
+    	if (IO.imu != null) {
+    		SmartDashboard.putBoolean("First Iteration Of Gyro Complete", true);
+    	} else {
+    		SmartDashboard.putBoolean("First Iteration Of Gyro Complete", false);
+    	}
     }
     
     public void autonomousInit() {
@@ -47,7 +62,7 @@ public class Robot extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
-    	isToteIn = (IO.toteSensor.get()? false : true);
+    	boolean isToteIn = (IO.toteSensor.get()? false : true);
     	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
     	
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
