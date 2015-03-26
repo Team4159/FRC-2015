@@ -145,7 +145,7 @@ class AutoMethods {
 	private static double exitTime = 3.0;
 	private static double toteDropTime = 1.0;
 	
-	private static double Kp = 0.0028;				//tune for gyro
+	private static double Kp = 0.00278;				//tune for gyro
 	private static double drivetrainOffset = 0.1;
 	private static double toteAimTime = 1;
 	
@@ -163,6 +163,21 @@ class AutoMethods {
  		autoTime.reset();
  		IO.elevator.autoLift(0.0);
  		
+ 	}
+ 	
+ 	public static void gyroStraightDrive(double speed, double duration) {
+ 		autoTime.reset();
+ 		while (autoTime.get() < duration) {
+ 			OctoDrive.autoDrive.drive(speed, -Kp*IO.imu.getYaw());
+ 		}
+ 		OctoDrive.autoDrive.drive(0.0, 0.0);
+ 	}
+ 	
+ 	public static void toteGet(double speed) {
+ 		while (IO.toteSensor.get()) {
+ 			OctoDrive.autoDrive.drive(speed, -Kp*IO.imu.getYaw());
+ 		}
+ 		OctoDrive.autoDrive.drive(0.0, 0.0);
  	}
 	
 	//================================//
