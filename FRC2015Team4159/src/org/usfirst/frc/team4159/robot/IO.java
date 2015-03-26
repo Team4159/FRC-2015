@@ -31,8 +31,8 @@ public class IO {
 		elevator.setHighLow(lowLimit, highLimit);
 	}
 
-	public static GyroManager mainGyro = new GyroManager(new gyroSampler          //Gyro Declaration
-				(new GyroITG3200(I2C.Port.kOnboard), 50, 5));
+//	public static GyroManager mainGyro = new GyroManager(new gyroSampler          //Gyro Declaration
+//				(new GyroITG3200(I2C.Port.kOnboard), 50, 5));
 	
 	
 //	public static NetworkTable imageValues;										  //RoboRealm NetworkTable Declaration
@@ -41,6 +41,6 @@ public class IO {
 //	}
 	public static DigitalInput toteSensor = new DigitalInput(7);
 	
-	public static AHRS imu;
+	public static AHRS imu;														  //navX object declaration
 	public static SerialPort serial_port;
 }

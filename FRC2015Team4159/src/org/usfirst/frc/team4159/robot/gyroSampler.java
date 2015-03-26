@@ -39,8 +39,7 @@ public class gyroSampler implements Runnable {
 		mainGyro.initialize();
 		while(isLoopRunning){
 			SmartDashboard.putBoolean("If Thread Active", true);
-			//ETHAN, do your gyro sampling magic over here 
-			//(remember this is a while loop though)
+			
 				short avg_result=0;
 				int avg_sum=0;
 				tmp_angle=gyro_angle;

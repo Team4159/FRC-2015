@@ -48,6 +48,16 @@ public class Robot extends IterativeRobot {
     
     
     public void autonomousPeriodic() {
+    	boolean is_calibrating = IO.imu.isCalibrating();
+    	if (first_iteration && !is_calibrating); {
+    		Timer.delay(0.3);
+    		IO.imu.zeroYaw();
+    		first_iteration = false;
+    	}
+
+    	SmartDashboard.putBoolean("IMU_Connected", IO.imu.isConnected());
+    	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
+    	
     	AutoMethods.runRoutine(autoChoice);
 //   	if(testTime.get() > 2.0) {
 //    		OctoDrive.autoDrive.drive(0.0, 0.0);
@@ -62,8 +72,18 @@ public class Robot extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
+    	boolean is_calibrating = IO.imu.isCalibrating();
+    	if (first_iteration && !is_calibrating); {
+    		Timer.delay(0.3);
+    		IO.imu.zeroYaw();
+    		first_iteration = false;
+    	}
+    	
+    	SmartDashboard.putBoolean("IMU_Connected", IO.imu.isConnected());
+    	
     	boolean isToteIn = (IO.toteSensor.get()? false : true);
     	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
+    	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
     	
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
     		IO.mainDrive.octoShift(2);
@@ -88,6 +108,8 @@ public class Robot extends IterativeRobot {
     	} else {
     		IO.elevator.autoLift(0.0);										  //Stops elevator if there is no joystick input
     	}
+    
+    	AutoBalancer.balanceFeed(IO.imu.getPitch());
     	
     }
     
