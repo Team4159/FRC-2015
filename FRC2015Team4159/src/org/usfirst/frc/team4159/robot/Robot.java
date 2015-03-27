@@ -86,14 +86,14 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
     	
     	if (IO.leftStick.getRawButton(3)) { //Changes to tank
-    		IO.mainDrive.octoShift(2);
+    		IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
     		SmartDashboard.putString("Drive State:", "Traction/Tank");
     	}
     	else if (IO.leftStick.getRawButton(2)) { //Changes to mecanum
-    		IO.mainDrive.octoShift(1);
+    		IO.mainDrive.octoShift(OctoDrive.MECANUM_DRIVE);
     		SmartDashboard.putString("Drive State:", "Mecanum");
     	} else if(IO.leftStick.getRawButton(5)) { //Raises back set piston set and changes control to tank
-    		IO.mainDrive.octoShift(3);
+    		IO.mainDrive.octoShift(OctoDrive.BACK_EXTEND_DRIVE);
     		SmartDashboard.putString("Drive State:", "Back Traction, Front Mecanum/Tank");
     	}
     	
