@@ -13,13 +13,13 @@ public class AutoBalancer {
 	}
 	
 	public static void balanceFeed(float angle) {
-		while (angle >= OFFBALANCEANGLE && angle > ONBALANCEANGLE) {
-			SmartDashboard.putBoolean("Auto-Balance_Engaged", true);
+		while (angle >= OFFBALANCEANGLE && angle > ONBALANCEANGLE) {		//If angle exceeds the off-balance threshold, loop triggers and forces robot to drive backwards
+			SmartDashboard.putBoolean("Auto-Balance_Engaged", true);		//Until it goes under a certain on-balance threshold as well
 			angle_in_radians = Math.toRadians(angle);
-			driveMagnitude = -1 * Math.sin(angle_in_radians);
+			driveMagnitude = -1 * Math.sin(angle_in_radians); //used to slow down as the angle decreases (negative to drive backwards)
 			
 			OctoDrive.autoDrive.drive(driveMagnitude, 0.0);
-			angle = IO.imu.getPitch();
+			angle = IO.imu.getPitch(); //Rereads the angle for the next loop
 		}
 
 		SmartDashboard.putBoolean("Auto-Balance_Engaged", false);

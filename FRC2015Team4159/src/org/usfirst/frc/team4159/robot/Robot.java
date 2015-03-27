@@ -147,7 +147,6 @@ class AutoMethods {
 	
 	private static double Kp = 0.00278;				//tune for gyro
 	private static double drivetrainOffset = 0.1;
-	private static double toteAimTime = 1;
 	
 	private AutoMethods() {
 		
