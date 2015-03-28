@@ -26,7 +26,6 @@ public class Robot extends IterativeRobot {
     		IO.serial_port = new SerialPort(57600, SerialPort.Port.kUSB);
     		byte update_rate_hz = 50;
     		IO.imu = new AHRS(IO.serial_port, update_rate_hz);
-    		first_iteration = true;
     	} catch(Exception ex){
     		
     	}
@@ -82,26 +81,20 @@ public class Robot extends IterativeRobot {
     	
     	SmartDashboard.putBoolean("IMU_Connected", IO.imu.isConnected());
     	
-    	boolean isToteIn = !IO.toteSensor.get();
+    	boolean isToteIn = (IO.toteSensor.get()? false : true);
     	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
     	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
     	
-    	if (IO.leftStick.getRawButton(3)) { 							//Changes to tank
-    		
+    	if (IO.leftStick.getRawButton(3)) { //Changes to tank
     		IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
     		SmartDashboard.putString("Drive State:", "Traction/Tank");
-    		
     	}
-    	else if (IO.leftStick.getRawButton(2)) { 						//Changes to mecanum
-    		
+    	else if (IO.leftStick.getRawButton(2)) { //Changes to mecanum
     		IO.mainDrive.octoShift(OctoDrive.MECANUM_DRIVE);
     		SmartDashboard.putString("Drive State:", "Mecanum");
-    		
-    	} else if(IO.leftStick.getRawButton(5)) {					    //Raises back set piston set and changes control to tank
-    		
+    	} else if(IO.leftStick.getRawButton(5)) { //Raises back set piston set and changes control to tank
     		IO.mainDrive.octoShift(OctoDrive.BACK_EXTEND_DRIVE);
     		SmartDashboard.putString("Drive State:", "Back Traction, Front Mecanum/Tank");
-    		
     	}
     	
     	IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(), 
@@ -171,7 +164,7 @@ class AutoMethods {
  		
  	}
  	
- 	public static void straightDrive(double speed, double duration) {
+ 	public static void gyroStraightDrive(double speed, double duration) {
  		autoTime.reset();
  		while (autoTime.get() < duration) {
  			OctoDrive.autoDrive.drive(speed, -Kp*IO.imu.getYaw());
@@ -218,52 +211,33 @@ class AutoMethods {
 		OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
 	}
 	
-	public static void continuedRoutine(boolean ifGyro) {
-		if (ifGyro) { 
-			toteGet(0.5);
-			IO.elevator.moveLow();
-			toteTimedLift(liftTime);
-			autoStrafe(0.5, rejoinRouteTime);
-			straightDrive(0.5, travelTime);
-			autoStrafe(-0.5, rejoinRouteTime);
-			
-		} else {
-			toteGet(0.5, drivetrainOffset);
-			IO.elevator.moveLow();
-			toteTimedLift(liftTime);
-			autoStrafe(0.5, rejoinRouteTime);
-			straightDrive(0.5, travelTime, drivetrainOffset);
-			autoStrafe(-0.5, rejoinRouteTime);
-		}
+	public static void continuedRoutine() {
+		toteGet(0.5, drivetrainOffset);
+		IO.elevator.moveLow();
+		toteTimedLift(liftTime);
+		autoStrafe(0.5, rejoinRouteTime);
+		straightDrive(0.5, travelTime, drivetrainOffset);
+		autoStrafe(-0.5, rejoinRouteTime);
 	}
 	
-	public static void endRoutine(boolean ifGyro) {
-		if (ifGyro) {
-			toteGet(0.5);
-			IO.elevator.moveLow();
-			toteTimedLift(liftTime);
-			autoStrafe(0.5, exitTime);
-			IO.elevator.moveLow();
-			straightDrive(-0.5, toteDropTime);
-		} else {
-			toteGet(0.5, drivetrainOffset);
-			IO.elevator.moveLow();
-			toteTimedLift(liftTime);
-			autoStrafe(0.5, exitTime);
-			IO.elevator.moveLow();
-			straightDrive(-0.5, toteDropTime, drivetrainOffset);
-		}
+	public static void endRoutine() {
+		toteGet(0.5, drivetrainOffset);
+		IO.elevator.moveLow();
+		toteTimedLift(liftTime);
+		autoStrafe(0.5, exitTime);
+		IO.elevator.moveLow();
+		straightDrive(0.5, toteDropTime, drivetrainOffset);
 	}
 	
 	public static void runRoutine(int autoChoice) {
 		switch (autoChoice) {
 			case AutoChooser.MOVE_ONLY:
-				AutoMethods.straightDrive(0.5, 2, -0.05);                           
+				AutoMethods.straightDrive(0.5, 2, -0.05);                           //Fix with gyro method
 				break;
 			case AutoChooser.PICK_THREE_TOTE:
-				AutoMethods.continuedRoutine(IO.imu.isConnected());
-				AutoMethods.continuedRoutine(IO.imu.isConnected());
-				AutoMethods.endRoutine(IO.imu.isConnected());
+				AutoMethods.continuedRoutine();
+				AutoMethods.continuedRoutine();
+				AutoMethods.endRoutine();
 				break;
 			default:
 				break;
