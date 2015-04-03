@@ -2,6 +2,7 @@ package org.usfirst.frc.team4159.robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
+
 import java.lang.Math;
 
 public class OctoDrive {
@@ -23,6 +24,7 @@ public class OctoDrive {
 	private boolean rightSideInverted;
 	
 	public static RobotDrive autoDrive;
+	public static RobotDrive strafeDrive;
 	
 	public static final int MECANUM_DRIVE = 1;
 	public static final int TANK_DRIVE = 2;
@@ -43,6 +45,7 @@ public class OctoDrive {
 		octoShift = pistonSet;
 		
 		autoDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight); //For autonomous driving turning method
+		strafeDrive = new RobotDrive(frontRight, frontLeft, rearRight, rearLeft);
 	}
 	
 	

@@ -8,6 +8,7 @@ package org.usfirst.frc.team4159.robot;
 import com.kauailabs.navx_mxp.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -65,7 +66,8 @@ public class Robot extends IterativeRobot {
     		}
     		
     		if (firstRun) {
-    			autoStrafe(0.5, 2);
+    			toteTimedLift(2.0);
+    			straightDrive(0.5, 1.25);
     			firstRun=false;
     		}
 //    	
@@ -144,11 +146,11 @@ public class Robot extends IterativeRobot {
     	
     	if(!ifSevenDown && IO.secondaryStick.getRawButton(7))
     	{
-    		if (elevatorValue > 0.0) {
+    		if (elevatorValue > 0.6) {
     			elevatorValue = elevatorValue - 0.2;
     		}
-    		if (elevatorValue < 0.0) {
-    			elevatorValue = 0.0;
+    		if (elevatorValue < 0.6) {
+    			elevatorValue = 0.6;
     		}
     		ifSevenDown = true;
     	} else if(ifSevenDown && ! IO.secondaryStick.getRawButton(7))
@@ -217,8 +219,9 @@ public class Robot extends IterativeRobot {
 	
  	public static void toteTimedLift(double liftTime) {
  		IO.elevator.moveLow();
+ 		autoTime.reset();
  		autoTime.start();
- 		while (!autoTime.hasPeriodPassed(liftTime)) {
+ 		while (autoTime.get() < liftTime) {
  			IO.elevator.autoLift(1.0);
  		}
  		autoTime.stop();
@@ -282,11 +285,9 @@ public class Robot extends IterativeRobot {
 	public static void autoStrafe(double speed, double duration) {
 		autoTime.reset();
 		autoTime.start();
+		
 		while (autoTime.get() < duration) {
-			IO.wheelSet.frontLeftMotor.set(-speed);						//CHECK FOR MOTOR INVERSION
-			IO.wheelSet.rearLeftMotor.set(speed);
-			IO.wheelSet.frontRightMotor.set(speed);
-			IO.wheelSet.rearRightMotor.set(speed);
+			OctoDrive.strafeDrive.drive(0.5, -Kp * imu.getYaw());
 		}
 		autoTime.stop();
 		autoTime.reset();
