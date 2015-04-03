@@ -32,6 +32,6 @@ public class IO {
 
 	public static DigitalInput toteSensor = new DigitalInput(7);
 	
-	public static AHRS imu;														  //navX object declaration
-	public static SerialPort serial_port;
+//	public static AHRS imu;														  //navX object declaration
+//	public static SerialPort serial_port;
 }

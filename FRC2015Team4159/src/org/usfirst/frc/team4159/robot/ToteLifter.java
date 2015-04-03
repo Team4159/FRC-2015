@@ -44,7 +44,7 @@ public class ToteLifter {
 	public void autoLift(double velocity) {                 //Takes input from sensors to see if they are pressed
 			if (velocity > 0) {
 				
-				if (topLimit.get() == false) {              //Checks if top limit switch is pressed if positive value
+				if (!topLimit.get()) {              //Checks if top limit switch is pressed if positive value
 					manualLift(0.0);                   //If not, it continues
 				} else {
 					manualLift(velocity);
@@ -52,7 +52,7 @@ public class ToteLifter {
 				
 			} else if (velocity < 0) {
 				
-				if (lowLimit.get() == false) {              
+				if (!lowLimit.get()) {              
 					manualLift(0.0);
 				} else {
 					manualLift(velocity);              //Checks if low limit switch is pressed if negative value

@@ -11,86 +11,107 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 //import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-
+	public static AHRS imu;														  //navX object declaration
+	public static SerialPort serial_port;
 	int autoChoice;
 	boolean first_iteration;
-
+	boolean is_calibrating;
+	double elevatorValue;
+	
 //	Timer testTime = new Timer();
     public void robotInit() {
-    	AutoChooser.setup();
+//    	AutoChooser.setup();
     	try {
-    		IO.serial_port = new SerialPort(57600, SerialPort.Port.kUSB);
+    		serial_port = new SerialPort(57600, SerialPort.Port.kUSB);
     		byte update_rate_hz = 50;
-    		IO.imu = new AHRS(IO.serial_port, update_rate_hz);
-    		first_iteration = true;
-    	} catch(Exception ex){
-    		
+    		imu = new AHRS(serial_port, update_rate_hz);
+    		first_iteration=true;
+    	} catch (Exception ex) {
+    		first_iteration=false;
     	}
-    	
-    	if (IO.imu != null) {
+    		
+    	if (imu != null) {
     		SmartDashboard.putBoolean("First Iteration Of Gyro Complete", true);
+    		LiveWindow.addSensor("IMU", "Gyro", imu);
     	} else {
     		SmartDashboard.putBoolean("First Iteration Of Gyro Complete", false);
     	}
     }
     
+    boolean firstRun;
+    
     public void autonomousInit() {
-    	autoChoice = AutoChooser.getChoice();
-    	IO.mainDrive.octoShift(1);            //Shifts to mecanum
+//    	autoChoice = AutoChooser.getChoice();
+    	IO.mainDrive.octoShift(OctoDrive.MECANUM_DRIVE);            //Shifts to mecanum
 //    	testTime.reset();
 //    	testTime.start();
+    	firstRun=true;
     	
     }
     
     
     
     public void autonomousPeriodic() {
-    	boolean is_calibrating = IO.imu.isCalibrating();
-    	if (first_iteration && !is_calibrating); {
-    		Timer.delay(0.3);
-    		IO.imu.zeroYaw();
-    		first_iteration = false;
-    	}
-
-    	SmartDashboard.putBoolean("IMU_Connected", IO.imu.isConnected());
-    	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
-    	
-    	AutoMethods.runRoutine(autoChoice);
-//   	if(testTime.get() > 2.0) {
-//    		OctoDrive.autoDrive.drive(0.0, 0.0);
-//    		testTime.stop();
-//    	} else {
-//    		OctoDrive.autoDrive.drive(0.5, 0.0);
-//    	}
-//    	SmartDashboard.putNumber("Auto Time", testTime.get());
+    		boolean is_calibrating = imu.isCalibrating();
+    		if (first_iteration && !is_calibrating); {
+    			Timer.delay(0.3);
+    			imu.zeroYaw();
+    			first_iteration = false;
+    		}
+    		
+    		if (firstRun) {
+    			autoStrafe(0.5, 2);
+    			firstRun=false;
+    		}
+//    	
+//
+//    	SmartDashboard.putBoolean("IMU_Connected", imu.isConnected());
+//    	SmartDashboard.putBoolean("IMU_IsCalibrating", imu.isCalibrating());
+//    	
+//    	runRoutine(autoChoice);
+////   	if(testTime.get() > 2.0) {
+////    		OctoDrive.autoDrive.drive(0.0, 0.0);
+////    		testTime.stop();
+////    	} else {
+////    		OctoDrive.autoDrive.drive(0.5, 0.0);
+////    	}
+////    	SmartDashboard.putNumber("Auto Time", testTime.get());
     }
+    
+    boolean ifSixDown;
+    boolean ifSevenDown;
+    
     public void teleopInit() {
-    	
+    	elevatorValue = 1.0;
+    	ifSixDown=false;
+    	ifSevenDown=false;
     }
     
     public void teleopPeriodic() {
-    	boolean is_calibrating = IO.imu.isCalibrating();
-    	if (first_iteration && !is_calibrating); {
-    		Timer.delay(0.3);
-    		IO.imu.zeroYaw();
-    		first_iteration = false;
-    	}
+//    		is_calibrating = imu.isCalibrating();
+//    		if (first_iteration && !is_calibrating); {
+//    			Timer.delay(0.3);
+//    			imu.zeroYaw();
+//    			first_iteration = false;
+//    		}
     	
-    	SmartDashboard.putBoolean("IMU_Connected", IO.imu.isConnected());
     	
-    	boolean isToteIn = !IO.toteSensor.get();
-    	SmartDashboard.putBoolean("Tote Sensed?",  isToteIn);
-    	SmartDashboard.putBoolean("IMU_IsCalibrating", IO.imu.isCalibrating());
+    	SmartDashboard.putNumber("Yaw Value", imu.getYaw());
+    	SmartDashboard.putNumber("Pitch Value", imu.getPitch());
+    	SmartDashboard.putNumber("Roll Value", imu.getRoll());
+    	
+    	SmartDashboard.putBoolean("Tote Sensed?",  !IO.toteSensor.get());
     	
     	if (IO.leftStick.getRawButton(3)) { 							//Changes to tank
     		
     		IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
     		SmartDashboard.putString("Drive State:", "Traction/Tank");
-    		
+    		 
     	}
     	else if (IO.leftStick.getRawButton(2)) { 						//Changes to mecanum
     		
@@ -107,21 +128,55 @@ public class Robot extends IterativeRobot {
     	IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(), 
     			IO.rightStick.getX(), IO.rightStick.getY()); 				  //Drives according to tank/mecanum boolean in OctoDrive
         
+    	if(!ifSixDown && IO.secondaryStick.getRawButton(6))
+    	{
+    		if (elevatorValue < 1.0) {
+    			elevatorValue = elevatorValue + 0.2;
+    		}
+    		if (elevatorValue > 1.0) {
+    			elevatorValue = 1.0;
+    		}
+    		ifSixDown = true;
+    	} else if(ifSixDown && ! IO.secondaryStick.getRawButton(6))
+    	{
+    		ifSixDown = false;
+    	}
+    	
+    	if(!ifSevenDown && IO.secondaryStick.getRawButton(7))
+    	{
+    		if (elevatorValue > 0.0) {
+    			elevatorValue = elevatorValue - 0.2;
+    		}
+    		if (elevatorValue < 0.0) {
+    			elevatorValue = 0.0;
+    		}
+    		ifSevenDown = true;
+    	} else if(ifSevenDown && ! IO.secondaryStick.getRawButton(7))
+    	{
+    		ifSevenDown = false;
+    	}
+    	
+    	
     	if (IO.secondaryStick.getRawButton(3)){								  //Moves elevator up
-    		IO.elevator.autoLift(1.0);          
+    		IO.elevator.autoLift(elevatorValue);          
     	} 
     	else if (IO.secondaryStick.getRawButton(2)){						  //Moves elevator down
-    		IO.elevator.autoLift(-1.0);
+    		IO.elevator.autoLift(-elevatorValue);
     	} else {
     		IO.elevator.autoLift(0.0);										  //Stops elevator if there is no joystick input
     	}
     
-    	AutoBalancer.balanceFeed(IO.imu.getPitch());
+    	AutoBalancer.balanceFeed(-1*imu.getRoll());
+    	
+    	SmartDashboard.putNumber("Elevator_Speed", elevatorValue*100);
+    	SmartDashboard.putBoolean("Upper Limit Reached", !IO.highLimit.get());
+    	SmartDashboard.putBoolean("Lower Limit Reached", !IO.lowLimit.get());
+    	
+    	
     	
     }
     
     public void testInit() {
-
     	
     }
     
@@ -131,33 +186,34 @@ public class Robot extends IterativeRobot {
 //	}  else {
 //		testLED.set(false);
 //	}
+    	OctoDrive.autoDrive.mecanumDrive_Cartesian(0.75, 0, 0, 0);
     }	
     
     public void disabledInit() {
     	
     	
     }
-}
 
+//FIX UP AUTO STRAFE TO TURN ALL WHEELS IN RIGHT DIRECTION
 //=============================================================================================================================//
 //AUTONOMOUS//
-class AutoMethods {
+
 	
-	private static Timer autoTime;
+	private static Timer autoTime = new Timer();
 	
 	
-	private static double travelTime = 3.0;        //Change based on how the mecanum wheels perform on carpet
+	private static double travelTime = 1.0;        //Change based on how the mecanum wheels perform on carpet
 	private static double rejoinRouteTime = 1.0; 
 	private static double liftTime = 1.0;
 	private static double exitTime = 3.0;
 	private static double toteDropTime = 1.0;
+	private static double giveupTime = 3.0;
 	
 	private static double Kp = 0.00278;				//tune for gyro
 	private static double drivetrainOffset = 0.1;
 	
-	private AutoMethods() {
-		
-	}
+	
+	
 	
  	public static void toteTimedLift(double liftTime) {
  		IO.elevator.moveLow();
@@ -173,17 +229,26 @@ class AutoMethods {
  	
  	public static void straightDrive(double speed, double duration) {
  		autoTime.reset();
+ 		autoTime.start();
  		while (autoTime.get() < duration) {
- 			OctoDrive.autoDrive.drive(speed, -Kp*IO.imu.getYaw());
+ 			OctoDrive.autoDrive.drive(speed, -Kp*imu.getYaw());
  		}
  		OctoDrive.autoDrive.drive(0.0, 0.0);
+ 		autoTime.stop();
  	}
  	
  	public static void toteGet(double speed) {
+ 		autoTime.reset();
+ 		autoTime.start();
  		while (IO.toteSensor.get()) {
- 			OctoDrive.autoDrive.drive(speed, -Kp*IO.imu.getYaw());
+ 			OctoDrive.autoDrive.drive(speed, -Kp*Robot.imu.getYaw());
+ 			if (autoTime.get() > giveupTime) {
+ 				break;
+ 			}
  		}
  		OctoDrive.autoDrive.drive(0.0, 0.0);
+ 		autoTime.stop();
+ 		
  	}
 	
 	//================================//
@@ -201,10 +266,17 @@ class AutoMethods {
 	}
 	
 	public static void toteGet(double speed, double offset) {
+		autoTime.reset();
+		autoTime.start();
 		while(IO.toteSensor.get()) {
 			OctoDrive.autoDrive.drive(speed, offset);
+			
+			if (autoTime.get() > giveupTime) {
+				break;
+			}
 		}
 		OctoDrive.autoDrive.drive(0.0, 0.0);
+		autoTime.stop();
 	}
 	
 	public static void autoStrafe(double speed, double duration) {
@@ -258,15 +330,16 @@ class AutoMethods {
 	public static void runRoutine(int autoChoice) {
 		switch (autoChoice) {
 			case AutoChooser.MOVE_ONLY:
-				AutoMethods.straightDrive(0.5, 2, -0.05);                           
+				straightDrive(0.5, 2, -0.05);                           
 				break;
 			case AutoChooser.PICK_THREE_TOTE:
-				AutoMethods.continuedRoutine(IO.imu.isConnected());
-				AutoMethods.continuedRoutine(IO.imu.isConnected());
-				AutoMethods.endRoutine(IO.imu.isConnected());
+				continuedRoutine(Robot.imu.isConnected());
+				continuedRoutine(Robot.imu.isConnected());
+				endRoutine(Robot.imu.isConnected());
 				break;
 			default:
 				break;
 		}
 	}
 }
+
