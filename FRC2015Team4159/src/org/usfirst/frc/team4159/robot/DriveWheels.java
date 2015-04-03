@@ -26,5 +26,12 @@ public class DriveWheels {
 		rearRightMotor = new Victor(channel4);
 	}
 	
+	public void stopAll() {
+		frontLeftMotor.set(0);
+		rearLeftMotor.set(0);
+		frontRightMotor.set(0);
+		rearRightMotor.set(0);
+	}
+	
 	
 }

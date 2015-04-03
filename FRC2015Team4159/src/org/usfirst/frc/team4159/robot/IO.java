@@ -11,7 +11,7 @@ public class IO {
 	public static Joystick rightStick = new Joystick(2);
 	public static Joystick secondaryStick = new Joystick(3);
 	
-	private static DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);			  //Drivetrain Declarations
+	public static DriveWheels wheelSet = new DriveWheels(0, 1, 2, 3);			  //Drivetrain Declarations
 	private static DrivePistons pistonSet = new DrivePistons(0, 1, 2, 3);		  
 	public static OctoDrive mainDrive = new OctoDrive(wheelSet, pistonSet)
 	.octoShift(1)

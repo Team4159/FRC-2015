@@ -283,11 +283,14 @@ public class Robot extends IterativeRobot {
 		autoTime.reset();
 		autoTime.start();
 		while (autoTime.get() < duration) {
-			OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
+			IO.wheelSet.frontLeftMotor.set(-speed);						//CHECK FOR MOTOR INVERSION
+			IO.wheelSet.rearLeftMotor.set(speed);
+			IO.wheelSet.frontRightMotor.set(speed);
+			IO.wheelSet.rearRightMotor.set(speed);
 		}
 		autoTime.stop();
 		autoTime.reset();
-		OctoDrive.autoDrive.mecanumDrive_Cartesian(speed, 0.0, 0.0, 0.0);
+		IO.wheelSet.stopAll();
 	}
 	
 	public static void continuedRoutine(boolean ifGyro) {
