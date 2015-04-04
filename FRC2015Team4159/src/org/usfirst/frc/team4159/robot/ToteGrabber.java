@@ -8,22 +8,22 @@ public class ToteGrabber {
 	Victor rightGrabber;
 	DoubleSolenoid rightActuate;
 	DoubleSolenoid leftActuate;
-	
+
 	public ToteGrabber(Victor tmp_leftGrab, Victor tmp_rightGrab) {
 		leftGrabber = tmp_leftGrab;
 		rightGrabber = tmp_rightGrab;
 	}
-	
+
 	public ToteGrabber(int leftChannel, int rightChannel) {
 		leftGrabber = new Victor(leftChannel);
 		rightGrabber = new Victor(rightChannel);
 	}
-	
+
 	public void toteGrab(double velocity) {
 		leftGrabber.set(-velocity);
 		rightGrabber.set(velocity);
 	}
-	
+
 	public void grabberDeploy(boolean isActuated) {
 		if (isActuated) {
 			rightActuate.set(DoubleSolenoid.Value.kForward);
@@ -33,6 +33,5 @@ public class ToteGrabber {
 			leftActuate.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
-	
-	
+
 }
