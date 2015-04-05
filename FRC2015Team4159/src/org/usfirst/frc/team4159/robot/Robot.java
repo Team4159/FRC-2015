@@ -22,6 +22,8 @@ public class Robot extends IterativeRobot {
 	boolean first_iteration;
 	boolean is_calibrating;
 	double elevatorValue;
+	
+	private static boolean limited = false;
 
 	public static final double autoMotorPower = 0.5; // Do not exceed 50% or
 														// robot go bye bye
@@ -113,7 +115,15 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Roll Value", imu.getRoll());
 
 		SmartDashboard.putBoolean("Tote Sensed?", !IO.toteSensor.get());
-
+		
+		SmartDashboard.putBoolean("Acceleration Limiter", limited);
+		
+		if(IO.secondaryStick.getRawButton(5)&&limited){
+			limited = false;
+		}else if(IO.secondaryStick.getRawButton(5)&&!limited){
+			limited = true;
+		}
+		
 		if (IO.leftStick.getRawButton(3)) { // Changes to tank
 
 			IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
@@ -174,7 +184,8 @@ public class Robot extends IterativeRobot {
 										// input
 		}
 
-		AutoBalancer.balanceFeed(-1 * imu.getRoll());
+		AutoBalancer.balanceFeed(-1 * imu.getRoll(), limited, -IO.leftStick.getX() == 0 && IO.leftStick.getY() == 0 &&
+				IO.rightStick.getX() == 0 && IO.rightStick.getY() == 0);
 
 		SmartDashboard.putNumber("Elevator_Speed", elevatorValue * 100);
 		SmartDashboard.putBoolean("Upper Limit Reached", !IO.highLimit.get());
