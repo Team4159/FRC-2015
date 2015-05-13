@@ -77,9 +77,11 @@ public class Robot extends IterativeRobot {
 //			firstRun = false;
 //		}
 		if (!IO.toteSensor.get() && firstRun) {
-			IO.elevator.manualLift(1.0);
-			Timer.delay(1.0);
-			IO.elevator.manualLift(0.0);
+			IO.elevator.autoLift(1.0);
+			Timer.delay(2.5);
+			IO.elevator.autoLift(0.0);
+			Timer.delay(1.75);
+			IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
 			firstRun = false;
 		}
 		//
@@ -190,6 +192,7 @@ public class Robot extends IterativeRobot {
 
 	public void testInit() {
 		IO.mainDrive.octoShift(OctoDrive.MECANUM_DRIVE); // Shifts to mecanum
+		IO.elevator.moveLow();
 		firstRun = true;
 	}
 
@@ -199,7 +202,14 @@ public class Robot extends IterativeRobot {
 		// } else {
 		// testLED.set(false);
 		// }
-		autoStrafe(0.5, 1.0);
+		if ((!IO.toteSensor.get()||IO.secondaryStick.getTrigger()) && firstRun) {
+			IO.elevator.autoLift(1.0);
+			Timer.delay(2.5);
+			IO.elevator.autoLift(0.0);
+			Timer.delay(1.75);
+			IO.mainDrive.octoShift(OctoDrive.TANK_DRIVE);
+			firstRun = false;
+		}
 	}
 
 	public void disabledInit() {
