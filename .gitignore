@@ -18,10 +18,8 @@ FRC2015Team4159/build/
 FRC2015Team4159/dist/
 
 #WPILib stuff
-build.xml
-=======
-bin/
->>>>>>> 9ee9c7312a8b5e831ed1f7f427790bf759914fae
+FRC2015Team4159/build.xml
+FRC2015Team4159/sysProps.xml
 
 # Eclipse Core
 .project
