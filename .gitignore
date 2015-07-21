@@ -12,12 +12,16 @@ local.properties
 .loadpath
 
 #Compiled code
+<<<<<<< HEAD
 FRC2015Team4159/bin/
 FRC2015Team4159/build/
 FRC2015Team4159/dist/
 
 #WPILib stuff
 build.xml
+=======
+bin/
+>>>>>>> 9ee9c7312a8b5e831ed1f7f427790bf759914fae
 
 # Eclipse Core
 .project
