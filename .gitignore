@@ -11,6 +11,9 @@ local.properties
 .settings/
 .loadpath
 
+#Compiled code
+bin/
+
 # Eclipse Core
 .project
 
