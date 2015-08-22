@@ -11,15 +11,17 @@ local.properties
 .settings/
 .loadpath
 
+
+
 #Compiled code
-<<<<<<< HEAD
-FRC2015Team4159/bin/
-FRC2015Team4159/build/
-FRC2015Team4159/dist/
+bin/
+build/
+dist/
 
 #WPILib stuff
-FRC2015Team4159/build.xml
-FRC2015Team4159/sysProps.xml
+build.properties
+build.xml
+sysProps.xml
 
 # Eclipse Core
 .project
