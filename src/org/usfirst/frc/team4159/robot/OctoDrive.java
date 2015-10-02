@@ -69,8 +69,13 @@ public class OctoDrive {
 		return this; // For method chaining
 	}
 
-	public void manualDrive(double xVal1, double yVal1, double xVal2,
-			double yVal2) { // Drives the robot in a mecanum/tank mode
+	public void manualDrive(double xVal1, double yVal1, double xVal2, double yVal2) { // Drives
+																						// the
+																						// robot
+																						// in
+																						// a
+																						// mecanum/tank
+																						// mode
 		if (isMecanum == MECANUM_DRIVE) { // Value Dictates the type of drive
 											// you are using
 			double right = (xVal1 > 0 ? xVal1 * xVal1 : -(xVal1 * xVal1)); // Acceleration
@@ -122,8 +127,7 @@ public class OctoDrive {
 
 		} else { // Tank driving code
 			double leftVelocity = (yVal1 > 0 ? yVal1 * yVal1 : -(yVal1 * yVal1));
-			double rightVelocity = (yVal2 > 0 ? yVal2 * yVal2
-					: -(yVal2 * yVal2));
+			double rightVelocity = (yVal2 > 0 ? yVal2 * yVal2 : -(yVal2 * yVal2));
 
 			if (leftSideInverted) {
 				leftVelocity = -leftVelocity;

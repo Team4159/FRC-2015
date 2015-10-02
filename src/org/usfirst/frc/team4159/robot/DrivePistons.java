@@ -8,8 +8,8 @@ public class DrivePistons {
 	DoubleSolenoid piston1;
 	DoubleSolenoid piston2;
 
-	public DrivePistons(DoubleSolenoid solenoid1, DoubleSolenoid solenoid2,
-			DoubleSolenoid solenoid3, DoubleSolenoid solenoid4) {
+	public DrivePistons(DoubleSolenoid solenoid1, DoubleSolenoid solenoid2, DoubleSolenoid solenoid3,
+			DoubleSolenoid solenoid4) {
 		piston1 = solenoid1;
 		piston2 = solenoid2;
 

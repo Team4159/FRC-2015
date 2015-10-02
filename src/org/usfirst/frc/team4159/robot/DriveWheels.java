@@ -10,8 +10,7 @@ public class DriveWheels {
 	public Victor frontRightMotor;
 	public Victor rearRightMotor;
 
-	public DriveWheels(Victor frontLeft, Victor rearLeft, Victor frontRight,
-			Victor rearRight) {
+	public DriveWheels(Victor frontLeft, Victor rearLeft, Victor frontRight, Victor rearRight) {
 		frontLeftMotor = frontLeft;
 		rearLeftMotor = rearLeft;
 		frontRightMotor = frontRight;

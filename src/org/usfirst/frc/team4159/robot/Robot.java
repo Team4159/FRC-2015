@@ -1,18 +1,10 @@
 package org.usfirst.frc.team4159.robot;
 
-//import edu.wpi.first.wpilibj.DigitalInput;
-//import edu.wpi.first.wpilibj.DigitalOutput;
-//import edu.wpi.first.wpilibj.Gyro;
-//import edu.wpi.first.wpilibj.I2C;
 import com.kauailabs.navx_mxp.AHRS;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
-//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-//import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -45,8 +37,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putBoolean("First Iteration Of Gyro Complete", true);
 			LiveWindow.addSensor("IMU", "Gyro", imu);
 		} else {
-			SmartDashboard
-					.putBoolean("First Iteration Of Gyro Complete", false);
+			SmartDashboard.putBoolean("First Iteration Of Gyro Complete", false);
 		}
 	}
 
@@ -129,17 +120,17 @@ public class Robot extends IterativeRobot {
 													// tank
 
 			IO.mainDrive.octoShift(OctoDrive.BACK_EXTEND_DRIVE);
-			SmartDashboard.putString("Drive State:",
-					"Back Traction, Front Mecanum/Tank");
+			SmartDashboard.putString("Drive State:", "Back Traction, Front Mecanum/Tank");
 
 		}
 
-		IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(),
-				IO.rightStick.getX(), IO.rightStick.getY()); // Drives according
-																// to
-																// tank/mecanum
-																// boolean in
-																// OctoDrive
+		IO.mainDrive.manualDrive(-IO.leftStick.getX(), IO.leftStick.getY(), IO.rightStick.getX(), IO.rightStick.getY()); // Drives
+																															// according
+																															// to
+																															// tank/mecanum
+																															// boolean
+																															// in
+																															// OctoDrive
 
 		if (!ifSixDown && IO.secondaryStick.getRawButton(6)) {
 			if (elevatorValue < 1.0) {
@@ -165,9 +156,15 @@ public class Robot extends IterativeRobot {
 			ifSevenDown = false;
 		}
 
-		if (IO.secondaryStick.getRawButton(3) || IO.rightStick.getRawButton(3)) { // Moves elevator up
+		if (IO.secondaryStick
+				.getRawButton(3)/* || IO.rightStick.getRawButton(3) */) { // Moves
+																			// elevator
+																			// up
 			IO.elevator.autoLift(elevatorValue);
-		} else if (IO.secondaryStick.getRawButton(2) || IO.rightStick.getRawButton(2)) { // Moves elevator down
+		} else if (IO.secondaryStick
+				.getRawButton(2)/* || IO.rightStick.getRawButton(2) */) { // Moves
+																			// elevator
+																			// down
 			IO.elevator.autoLift(-elevatorValue);
 		} else {
 			IO.elevator.autoLift(0.0); // Stops elevator if there is no joystick
@@ -257,8 +254,7 @@ public class Robot extends IterativeRobot {
 	// ================================//
 	// METHODS THAT DO NOT REQUIRE GYRO//
 	// ================================//
-	public static void straightDrive(double speed, double duration,
-			double offset) {
+	public static void straightDrive(double speed, double duration, double offset) {
 		autoTime.reset();
 		autoTime.start();
 		while (autoTime.get() < duration) {
