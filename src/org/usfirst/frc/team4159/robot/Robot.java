@@ -17,7 +17,7 @@ public class Robot extends IterativeRobot {
 
 	public static final double autoMotorPower = 0.5; // Do not exceed 50% or
 														// robot go bye bye
-	public static final double autoMotorTime = 2.5;
+	public static final double autoMotorTime = 2.0;
 	public static final boolean autoPickup = true;
 	public static final double autoPickupTime = 2.0;
 
