@@ -99,9 +99,12 @@ public class Robot extends IterativeRobot {
 		// first_iteration = false;
 		// }
 
-		SmartDashboard.putNumber("Yaw Value", imu.getYaw());
-		SmartDashboard.putNumber("Pitch Value", imu.getPitch());
-		SmartDashboard.putNumber("Roll Value", imu.getRoll());
+		if(imu != null)
+		{
+			SmartDashboard.putNumber("Yaw Value", imu.getYaw());
+			SmartDashboard.putNumber("Pitch Value", imu.getPitch());
+			SmartDashboard.putNumber("Roll Value", imu.getRoll());
+		}
 
 		SmartDashboard.putBoolean("Tote Sensed?", !IO.toteSensor.get());
 
@@ -171,7 +174,10 @@ public class Robot extends IterativeRobot {
 										// input
 		}
 
-		AutoBalancer.balanceFeed(-1 * imu.getRoll());
+		if(imu != null)
+			AutoBalancer.balanceFeed(-1 * imu.getRoll());
+		else
+			AutoBalancer.balanceFeed(0);
 
 		SmartDashboard.putNumber("Elevator_Speed", elevatorValue * 100);
 		SmartDashboard.putBoolean("Upper Limit Reached", !IO.highLimit.get());
