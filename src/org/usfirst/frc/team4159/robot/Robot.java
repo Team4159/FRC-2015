@@ -157,12 +157,12 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (IO.secondaryStick
-				.getRawButton(3)/* || IO.rightStick.getRawButton(3) */) { // Moves
+				.getRawButton(3) || IO.rightStick.getRawButton(3) ) { // Moves
 																			// elevator
 																			// up
 			IO.elevator.autoLift(elevatorValue);
 		} else if (IO.secondaryStick
-				.getRawButton(2)/* || IO.rightStick.getRawButton(2) */) { // Moves
+				.getRawButton(2) || IO.rightStick.getRawButton(2) ) { // Moves
 																			// elevator
 																			// down
 			IO.elevator.autoLift(-elevatorValue);
