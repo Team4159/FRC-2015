@@ -3,9 +3,9 @@ package org.usfirst.frc.team4159.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoBalancer {
-	private static final double OFF_BALANCEANGLE = 25; // Tune for actual robot
+	private static final double OFF_BALANCEANGLE = 15; // Tune for actual robot
 														// (during SVR)
-	private static final double ON_BALANCEANGLE = 10;
+	private static final double ON_BALANCEANGLE = 5;
 	private static double angle_in_radians;
 	private static double driveMagnitude;
 
